@@ -27,9 +27,44 @@ def new_modern_die(off_set: int) -> PitchDie:
             return PitchDie.d4
         case _:
             return PitchDie.d8
-            
+ 
 
+ancient_ranges = [
+    {
+        "die": PitchDie.d12,
+        "range": range(2, 4),
+    },
+    {
+        "die": PitchDie.d8,
+        "range": range(4, 6),
+    },
+    {
+        "die": PitchDie.d6,
+        "range": range(6, 9),
+    },
+    {
+        "die": PitchDie.d4,
+        "range": range(9, 11),
+    },
+    {
+        "die": PitchDie.md4,
+        "range": range(12,14)
+    }
+]
+           
 
+def new_ancient_die(off_set: int) -> PitchDie:
+    pitch_roll = roll("1d12") + off_set
+    match pitch_roll:
+        case 1:
+            return PitchDie.d20
+        case _:
+            result
+            for dict in ancient_ranges:
+                if pitch_roll in dict.get("range"):
+                    result = dict.get("die")
+                    break
+            return resul or PitchDie.md8
 
 def get_pitch_die(era: Era, quality: Pitcher_Quality) -> PitchDie:
     off_set

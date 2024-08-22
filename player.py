@@ -3,33 +3,19 @@ from rpg_dice import roll
 from league import Era, League_Gender
 from b_traits import BTrait, get_random_trait
 import names
+from pd import PitchDie,get_pitch_die
 
+# AgeCate is an enum which is used for calculating a players age, with each value representing a different level of experience.
 class AgeCat(Enum):
-   Prospect = 1
-   Rookie = 2
-   Veteran = 3
-   OldTimer = 4
-
-
-
-class Pitcher_Quality(Enum):
    PROSPECT = 1
-   FARMHAND = 2
-
-class Batter_Quality(Enum):
-   PROSPECT = 1
-   FARMHAND = 2
-
-Player_Quality = Batter_Quality | Pitcher_Quality
-
-
-
-         
-       
-         
-
+   ROOKIE = 2
+   VETERAN = 3
+   OLDTIME = 4
+# Generates a players age based off AgeCat
 def generate_age(age_cat: AgeCat) -> int:
+   # We roll a d6 to 
    age_roll = roll("1d6")
+   # And then match the result to determin an age
    match age_cat:
       case AgeCat.Prospect:
          return 18 + age_roll
@@ -39,10 +25,36 @@ def generate_age(age_cat: AgeCat) -> int:
          return 26 + age_roll
       case AgeCat.Veteran:
          32 + roll
+# Assisng a player to a random age
+def random_age() -> int:
+   age_roll = roll("1d6")
+   #This will latter become an AgeCat value
+   age_cat 
+   # We look through various ranges to find a match to determine age_cat
+   if age_roll in {1, 2}:
+      age_cat = AgeCat.Prospect
+   elif roll in {3, 4}:
+        age_cat =  AgeCat.Rookie
+   elif roll == 5:
+        age_cat =  AgeCat.Veteran
+   elif roll == 6:
+        age_cat = AgeCat.OldTimer
+   return generate_age(age_cat)
 
+#Determines if a pitcher will get better results on average, with Prospect considered a higher quality player.
+class Pitcher_Quality(Enum):
+   PROSPECT = 1
+   FARMHAND = 2
+# Similar to Pitcher Quality but for Batters
+class Batter_Quality(Enum):
+   PROSPECT = 1
+   FARMHAND = 2
+
+#We create a union for  both types of player quality
+Player_Quality = Batter_Quality | Pitcher_Quality
 
       
-def get_batter_bt(quality: Batter_Quality, era: Era) -> int:
+def get_batter_bt(quality: Batter_Quality) -> int:
    match quality:
       case Batter_Quality.PROSPECT:
          return roll("2d10") + 15
@@ -71,7 +83,7 @@ def generate_bt(quality: Player_Quality) -> int:
 
 def time_2(num):
     return 3
-
+# As in real baseball, whether a player is left handed, right handed, or a switch hitter is important. We create an enum.
 class Hand(Enum):
    L = "L"
    R = "R"
@@ -79,13 +91,16 @@ class Hand(Enum):
 
 hand_array = []
 
-for _ in range(6):
+# we fill the hand_array with 7 instances of Hand.R
+for _ in range(7):
    hand_array.append(Hand.R)
 
-for _ in range(3):
+# And 4 instances of Hand.L
+for _ in range(4):
    hand_array.append(Hand.L)
 
 def get_batter_hand(quality: Player_Quality) -> Hand:
+   # We roll a d10
    hand_roll = roll("1d10")
    match hand_roll:
       # Rolling a 10 is a special action. If the player is a batter. then the batter will be a switch hitter,otherwise the batter will be a lefty
@@ -96,7 +111,7 @@ def get_batter_hand(quality: Player_Quality) -> Hand:
             case Pitcher_Quality():
                return Hand.L
       case _:
-         # If the roll does not equal 10, we subtract 1 from the hand roll amd return the corresponding value from the hand array, and we return righty if the valeu doesn't exist
+         # If the roll does not equal 10, we subtract 1 from the hand roll amd return the corresponding value from the hand array, and we return righty if the value doesn't exist
          return hand_array[hand_roll - 1] or Hand.R
 
 
@@ -116,4 +131,9 @@ class Player:
        self.obt = self.bt + self.walk_rate
        self.hand = get_batter_hand(quality)
        self.new_name(gender)
-       
+       match quality:
+          case Pitcher_Quality():
+             self.pitch_die = get_pitch_die(quality)
+             self.player_type = "Pitcher"
+      
+
