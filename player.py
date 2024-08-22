@@ -4,54 +4,44 @@ from league import Era, League_Gender
 from b_traits import BTrait, get_random_trait
 import names
 from pd import PitchDie,get_pitch_die
-
+from player_quality import Batter_Quality,Pitcher_Quality,Player_Quality
 # AgeCate is an enum which is used for calculating a players age, with each value representing a different level of experience.
 class AgeCat(Enum):
    PROSPECT = 1
    ROOKIE = 2
    VETERAN = 3
-   OLDTIME = 4
+   OLDTIMER = 4
 # Generates a players age based off AgeCat
 def generate_age(age_cat: AgeCat) -> int:
    # We roll a d6 to 
    age_roll = roll("1d6")
    # And then match the result to determin an age
    match age_cat:
-      case AgeCat.Prospect:
+      case AgeCat.PROSPECT:
          return 18 + age_roll
-      case AgeCat.Rookie:
+      case AgeCat.ROOKIE:
          return 21 + age_roll
-      case AgeCat.Veteran:
+      case AgeCat.VETERAN:
          return 26 + age_roll
-      case AgeCat.Veteran:
-         32 + roll
+      case AgeCat.OLDTIMER:
+         return 32 + roll
 # Assisng a player to a random age
 def random_age() -> int:
    age_roll = roll("1d6")
    #This will latter become an AgeCat value
-   age_cat 
+   age_cat = 0
    # We look through various ranges to find a match to determine age_cat
    if age_roll in {1, 2}:
-      age_cat = AgeCat.Prospect
+      age_cat = AgeCat.PROSPECT
    elif roll in {3, 4}:
-        age_cat =  AgeCat.Rookie
+        age_cat =  AgeCat.ROOKIE
    elif roll == 5:
-        age_cat =  AgeCat.Veteran
+        age_cat =  AgeCat.VETERAN
    elif roll == 6:
-        age_cat = AgeCat.OldTimer
+        age_cat = AgeCat.OLDTIMER
    return generate_age(age_cat)
 
-#Determines if a pitcher will get better results on average, with Prospect considered a higher quality player.
-class Pitcher_Quality(Enum):
-   PROSPECT = 1
-   FARMHAND = 2
-# Similar to Pitcher Quality but for Batters
-class Batter_Quality(Enum):
-   PROSPECT = 1
-   FARMHAND = 2
 
-#We create a union for  both types of player quality
-Player_Quality = Batter_Quality | Pitcher_Quality
 
       
 def get_batter_bt(quality: Batter_Quality) -> int:
@@ -71,9 +61,10 @@ def get_walk_rate(quality: Player_Quality) -> int:
 
 
 def generate_bt(quality: Player_Quality) -> int:
+
  match quality:
     case Batter_Quality():
-        return get_batter_bt()
+        return get_batter_bt(quality)
     case Pitcher_Quality():
        return roll ("2d6") + 12
 
@@ -127,13 +118,16 @@ class Player:
              self.first_name = names.get_first_name()
     def __init__(self,era: Era, gender: League_Gender, quality: Player_Quality, pos: str) -> None:
        self.bt = generate_bt(quality)
+       print(self.bt)
        self.walk_rate = get_walk_rate(quality)
        self.obt = self.bt + self.walk_rate
+       print(self.obt)
        self.hand = get_batter_hand(quality)
        self.new_name(gender)
+       self.age = random_age()
        match quality:
           case Pitcher_Quality():
              self.pitch_die = get_pitch_die(quality)
              self.player_type = "Pitcher"
-      
+       
 

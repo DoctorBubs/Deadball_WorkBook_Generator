@@ -1,8 +1,9 @@
 
 from enum import Enum
-from player import Player_Quality, Batter_Quality, Pitcher_Quality
+
 from league import Era
 from rpg_dice import roll
+from player_quality import Batter_Quality,Pitcher_Quality,Player_Quality
 class PitchDie(Enum):
     d20 = 20
     d12 = 12
@@ -64,7 +65,7 @@ def new_ancient_die(off_set: int) -> PitchDie:
                 if pitch_roll in dict.get("range"):
                     result = dict.get("die")
                     break
-            return resul or PitchDie.md8
+            return result or PitchDie.md8
 
 def get_pitch_die(era: Era, quality: Pitcher_Quality) -> PitchDie:
     off_set
