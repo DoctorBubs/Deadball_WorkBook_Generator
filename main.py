@@ -10,7 +10,7 @@ def main():
     cur = con.cursor()
     cur.execute("CREATE TABLE player(first_name, last_name, hand)")
 
-    batter_data = (bob.first_name, bob.last_name, bob.hand)
+    batter_data = (bob.first_name,bob.last_name,str(bob.hand))
     cur.execute("INSERT INTO player VALUES(?,?,?)", batter_data)
     con.commit()
 if __name__=="__main__":

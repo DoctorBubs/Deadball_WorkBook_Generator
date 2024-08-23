@@ -80,6 +80,10 @@ class Hand(Enum):
    R = "R"
    S = "S"
 
+   def __str__(self) -> str:
+      return str(self.value)
+
+
 hand_array = []
 
 # we fill the hand_array with 7 instances of Hand.R
