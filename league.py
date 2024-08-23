@@ -3,13 +3,13 @@ from enum import Enum
 
 
 class Era(Enum):
-    ANCIENT = 1
-    MODERN = 2
+    ANCIENT = "Ancient"
+    MODERN = "Modern"
 
 
 class League_Gender(Enum):
-    MALE = 1
-    FEMALE = 2
-    COED = 3
+    MALE = "Male"
+    FEMALE = "Female"
+    COED = "Coed"
 
 

@@ -1,7 +1,7 @@
 from enum import Enum
 from rpg_dice import roll
 from league import Era, League_Gender
-from b_traits import BTrait, get_random_trait
+from b_traits import BTrait, get_random_trait,sort_BTrait
 import names
 from pd import PitchDie,get_pitch_die
 from player_quality import Batter_Quality,Pitcher_Quality,Player_Quality
@@ -99,7 +99,7 @@ def get_batter_hand(quality: Player_Quality) -> Hand:
    # We roll a d10
    hand_roll = roll("1d10")
    match hand_roll:
-      # Rolling a 10 is a special action. If the player is a batter. then the batter will be a switch hitter,otherwise the batter will be a lefty
+      # Rolling a 10 is a special action. If the player is a self. then the self will be a switch hitter,otherwise the self will be a lefty
       case 10:
          match quality:
             case Batter_Quality():
@@ -129,11 +129,22 @@ class Player:
        self.new_name(gender)
        self.age = random_age()
        self.pos = pos
+       self.traits = []
        match quality:
           case Pitcher_Quality():
              self.pitch_die = get_pitch_die(era,quality)
-             
-       
+          case Batter_Quality():
+             first_trait = get_random_trait()
+             self.traits.append(first_trait)
+             match first_trait:
+                case BTrait.NONE:
+                  pass
+                case _ :
+                        second_trait = get_random_trait()
+                        if second_trait != first_trait and second_trait.value.category != first_trait.value.category:
+                         self.traits.append(second_trait)
+                         self.traits.sort(reverse = True, key = sort_BTrait)
+            
     def get_pd_string(self) -> str | None:
        if self.pitch_die:
           
@@ -143,4 +154,15 @@ class Player:
 
     def get_pitching_info(self) -> list:
       return [self.pos,self.first_name +" " + self.last_name,str(self.hand),self.pitch_die.value,self.bt,self.obt,self.age]
-      
+    
+    def get_trait_string(self) -> str:
+       result = None
+       for trait in self.traits:
+          if result:
+             result += trait.value.str
+          else:
+             result = trait.value.str
+       return result
+   
+    def get_batting_info(self) -> list:
+      return [self.pos,self.first_name +" " + self.last_name,str(self.hand),self.bt,self.obt,self.get_trait_string(),self.age]
