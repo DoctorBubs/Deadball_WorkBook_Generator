@@ -5,7 +5,9 @@ from league import Era,League_Gender
 
 lineup_strings = ["C","1B","2B","3B","SS","LF","CF","RF"]
 
-modern_bench_strings = ["C","INF","OF","UT"]
+modern_bench_strings = ["C","INF","INF","OF","OF"]
+
+ancient_bench_strings = ["C","INF","OF","UT"]
 
 def sort_bt(player: Player):
     return player.bt
@@ -26,7 +28,13 @@ class Team:
             self.starting_lineup.append(new_start_batter)
         self.starting_lineup.sort(key = sort_bt, reverse = True)
         self.bench = []
-        for bench_pos in modern_bench_strings:
+        bench_strings = None
+        match era:
+            case Era.ANCIENT:
+                bench_strings = ancient_bench_strings
+            case _: 
+                bench_strings = modern_bench_strings
+        for bench_pos in bench_strings:
             new_bench_batter = Player(era,gender,Batter_Quality.PROSPECT,bench_pos)
             batting_score += new_bench_batter.bt
             self.bench.append(new_bench_batter)
@@ -35,23 +43,23 @@ class Team:
         match era:
             case Era.ANCIENT:
                 self.pitchers = []
-                for _ in range(6):
+                for _ in range(5):
                     new_pitcher = Player(era,gender,Pitcher_Quality.PROSPECT,"P")
                     pitching_score += new_pitcher.pitch_die.value
                     self.pitchers.append(new_pitcher)
                 self.pitchers.sort(key = sort_pd, reverse = True)
             case _:
                 self.starting_rotation = []
-                for _ in range(6):
+                for _ in range(5):
                     new_starting_pitcher = Player(era,gender,Pitcher_Quality.PROSPECT,"SP")
                     pitching_score += new_starting_pitcher.pitch_die.value
                     self.starting_rotation.append(new_starting_pitcher)
                 self.starting_rotation.sort(key = sort_pd, reverse = True)
                 self.bullpen = []
-                for _ in range(8):
+                for _ in range(7):
                     new_reliever = Player(era,gender,Pitcher_Quality.PROSPECT,"RP")
                     pitching_score += new_reliever.pitch_die.value
-                self.bullpen.append(new_reliever)
+                    self.bullpen.append(new_reliever)
                 self.bullpen.sort(key = sort_pd, reverse = True)
 
         pitching_score = pitching_score * 7

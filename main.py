@@ -5,36 +5,32 @@ from player_quality import Batter_Quality,Pitcher_Quality,Player_Quality
 import sqlite3
 import xlsxwriter
 
+batting_headers = ["Pos","Name","Hand","BT","OBT", "Age"]
+pitching_headers = ["Pos","Name","Hand","PD","BT","OBT","Age"]
 
-def main():
-    bob = Player(Era.ANCIENT,League_Gender.MALE,Pitcher_Quality.PROSPECT,"SS")
-    print(bob.first_name)
-    
-    import xlsxwriter
 
-    workbook = xlsxwriter.Workbook('hello.xlsx')
-    worksheet = workbook.add_worksheet()
-
-    test_team = Team("Hollywood","Stars",Era.ANCIENT, League_Gender.MALE)
+def new_team(city: str, name: str, era: Era, gender: League_Gender,workbook):
+    worksheet = workbook.add_worksheet(city + " " + name)
+    team = Team(city,name,era,gender)
     worksheet.write('A1', 'City')
     worksheet.write('B1', 'Team Name')
     worksheet.write('C1', 'Batting Score')
     worksheet.write('D1', 'Pitching Score')
     worksheet.write('E1','Team Score')
-    base_team_info = [test_team.city, test_team.name]
+    base_team_info = [team.city, team.name]
     column = 0
     for data in base_team_info:
         worksheet.write(1,column,data)
         column += 1
     worksheet.write('C2','=SUM(D7:D14,D19:D23)')
-    worksheet.write('E2','=SUM(C2:D2) / 10)')
+    worksheet.write('E2','=SUM(C2:D2) / 10')
 
     worksheet.write('B1', 'Starting Lineup')
-    batting_headers = ["Pos","Name","Hand","BT","OBT", "Age"]
+    
     for row,info in enumerate(batting_headers):
         worksheet.write(5,row,info)
     column = 6
-    for batter in test_team.starting_lineup:
+    for batter in team.starting_lineup:
         batter_info = [batter.pos,batter.first_name +" " + batter.last_name,str(batter.hand),batter.bt,batter.obt,batter.age]
         for row,data in enumerate(batter_info):
             worksheet.write(column,row,data)
@@ -44,26 +40,58 @@ def main():
     for row,info in enumerate(batting_headers):
         worksheet.write(column,row,info)
     column = column + 1
-    for bench_batter in test_team.bench:
+    for bench_batter in team.bench:
         bench_batter_info = [bench_batter.pos,bench_batter.first_name +" " + bench_batter.last_name,str(bench_batter.hand),bench_batter.bt,bench_batter.obt,bench_batter.age]
         for row,data in enumerate(bench_batter_info):
             worksheet.write(column,row,data)
         column += 1
 
     column += 2
-    pitching_headers = ["Pos","Name","Hand","PD","BT","OBT","Age"]
-    match test_team.era:
+    
+    match team.era:
         case Era.ANCIENT:
             worksheet.write(column,0,"Pitchers")
             for row,info in enumerate(pitching_headers):
                 worksheet.write(column,row,info)
             column += 1
-            for pitcher in test_team.pitchers:
-                pitcher_info = [pitcher.pos,pitcher.first_name +" " + pitcher.last_name,str(pitcher.hand),pitcher.pitch_die.value,pitcher.bt,pitcher.obt,pitcher.age]
+            for pitcher in team.pitchers:
+                pitcher_info = pitcher.get_pitching_info()
                 for row, data in enumerate(pitcher_info):
                     worksheet.write(column,row,data)
                 column += 1
             worksheet.write('D2','= SUM(D26:D31) * 7')
+        case Era.MODERN:
+            worksheet.write(column,0,"Starting Rotation")
+            column += 1
+            for row,info in enumerate(pitching_headers):
+                worksheet.write(column,row,info)
+            column += 1
+            for starting_pitcher in team.starting_rotation:
+                starting_pitcher_info = starting_pitcher.get_pitching_info()
+                for row,info in enumerate(starting_pitcher_info):
+                    worksheet.write(column,row,info)
+                column += 1
+            column += 2
+            worksheet.write(column,0,"Bullpen")
+            column += 1
+            for reliever in team.bullpen:
+                reliever_info = reliever.get_pitching_info()
+                for row,info in enumerate(reliever_info):
+                    worksheet.write(column,row,info)
+                column += 1
+            worksheet.write('D2','=SUM(D28:D32,D36:D42) * 7')
+def main():
+ 
+    
+
+
+    workbook = xlsxwriter.Workbook('test.xlsx')
+    
+
+    new_team("Hollywood","Stars",Era.MODERN,League_Gender.MALE,workbook)
+
+
+
     workbook.close()
 
   

@@ -123,10 +123,8 @@ class Player:
              self.first_name = names.get_first_name()
     def __init__(self,era: Era, gender: League_Gender, quality: Player_Quality, pos: str) -> None:
        self.bt = generate_bt(quality)
-       print(self.bt)
        self.walk_rate = get_walk_rate(quality)
        self.obt = self.bt + self.walk_rate
-       print(self.obt)
        self.hand = get_batter_hand(quality)
        self.new_name(gender)
        self.age = random_age()
@@ -138,9 +136,11 @@ class Player:
        
     def get_pd_string(self) -> str | None:
        if self.pitch_die:
-          print("player has a pitch die")
+          
           return str(self.pitch_die) 
        else:
           return None
 
+    def get_pitching_info(self) -> list:
+      return [self.pos,self.first_name +" " + self.last_name,str(self.hand),self.pitch_die.value,self.bt,self.obt,self.age]
       
