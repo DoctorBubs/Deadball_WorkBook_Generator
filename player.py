@@ -1,6 +1,6 @@
 from enum import Enum
 from rpg_dice import roll
-from league import Era, League_Gender
+from league_data import Era, League_Gender
 from b_traits import BTrait, get_random_BTrait,sort_BTrait
 from p_traits import PTrait,get_random_PTrait,sort_PTrait,conflicting_PTrait
 import names
@@ -186,6 +186,7 @@ class Player:
          else:
             result = str(trait)
       return result
+    
     def get_pitching_info(self) -> list:
       return [self.pos,self.first_name +" " + self.last_name,str(self.hand),self.pitch_die.value,self.get_pitching_trait_string(),self.bt,self.obt,self.age]
     

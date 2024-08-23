@@ -8,13 +8,12 @@ class PTrait(Enum):
     GBPLUS = "GB+"
     CNPLUS = "C+"
     STPLUS = "ST+"
-    NONE = "NONE"
+    NONE = ""
     def __str__(self) -> str:
         return self.value
 
 def get_random_PTrait() -> PTrait:
     trait_roll = roll("2d10")
-    print("trait roll = " + str(trait_roll))
     match trait_roll:
         case 5:
             return PTrait.CNMINUS

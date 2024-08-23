@@ -1,15 +1,15 @@
 
-from enum import Enum
+from league_data import Era, League_Gender
+from team import Team
 
 
-class Era(Enum):
-    ANCIENT = "Ancient"
-    MODERN = "Modern"
+
+class League:
+    def __init__(self,name: str, era: Era, gender: League_Gender) -> None:
+        self.name = name
+        self.era = era
+        self.gender = gender
 
 
-class League_Gender(Enum):
-    MALE = "Male"
-    FEMALE = "Female"
-    COED = "Coed"
-
-
+    def new_team(self, city: str, name: str) -> Team:
+        return Team(city,name,self.era,self.gender)

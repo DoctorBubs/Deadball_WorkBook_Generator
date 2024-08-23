@@ -1,7 +1,8 @@
 
 
-from player import Player, Batter_Quality,Pitcher_Quality, Player_Quality
-from league import Era,League_Gender
+from player import Player
+from player_quality import Batter_Quality, Pitcher_Quality, Player_Quality
+from league_data import Era,League_Gender
 
 lineup_strings = ["C","1B","2B","3B","SS","LF","CF","RF"]
 

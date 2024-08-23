@@ -1,7 +1,7 @@
 
 from enum import Enum
 
-from league import Era
+from league_data import Era
 from rpg_dice import roll
 from player_quality import Batter_Quality,Pitcher_Quality,Player_Quality
 class PitchDie(Enum):
