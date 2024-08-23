@@ -1,20 +1,23 @@
-from player import Player
+import os
+import xlsxwriter
+from beaupy import confirm, prompt, select
 from league import Era, League_Gender
 from team import Team
 from league import League
-from player_quality import Batter_Quality, Pitcher_Quality, Player_Quality
-import os
-import xlsxwriter
 
-from beaupy import confirm, prompt, select, select_multiple
+
+
+
+
 
 team_headers = ["City", "Team Name", "Batting Score", "Pitching Score", "Team Score"]
 batting_headers = ["Position", "Name", "Hand", "BT", "OBT", "Traits", "Age"]
 pitching_headers = ["Position", "Name", "Hand", "PD", "Traits", "BT", "OBT", "Age"]
 
 
-# Adds a new team to the workbook under a new worksheet
-def new_team(team: Team, era: Era, workbook):
+
+def new_team(team: Team, workbook) -> None:
+    '''Creates a worksheet in the workbook and fills it with data from the team and it's players.'''
     # We name the worksheet  after a comnibation of the team's city and nickname
     # worksheet = workbook.add_worksheet(city + " " + name)
 
@@ -114,8 +117,9 @@ def new_team(team: Team, era: Era, workbook):
             worksheet.write("D2", "=SUM(D28:D32,D37:D43) * 7")
 
 
-def valid_workbook_name(input: str) -> bool:
-    test_path = input + ".xlsx"
+def valid_workbook_name(user_input: str) -> bool:
+    '''Determines if a user generated workbook is not in use by a workbook in the folder.'''
+    test_path = user_input + ".xlsx"
     if os.path.exists(test_path):
         return False
     else:
@@ -123,24 +127,26 @@ def valid_workbook_name(input: str) -> bool:
 
 
 def get_workbook_name() -> str:
-    input = prompt(
+    '''Prompts the user for a unique workbook name that is not already in use in the folder.'''
+    user_input = prompt(
         "Please enter the file name you would like to save the new league under."
     )
     result = None
     os.system("cls")
     while True:
-        valid_name = valid_workbook_name(input)
+        valid_name = valid_workbook_name(user_input)
         if valid_name:
-            result = input
+            result = user_input
             break
         else:
-            input = prompt(
+            user_input = prompt(
                 "There is already a worksheet with that name in this folder, please try a different file name."
             )
     return result + ".xlsx"
 
 
 def get_team_name(workbook) -> dict:
+    '''Returns a dict containing a city and team name, while also ensuring their is not already a worksheet with the same combo'''
     while True:
         city_input = prompt("Please enter the name of the city for the new team.")
         name_input = prompt("Please enter the name of the new team.")
@@ -156,24 +162,26 @@ def get_team_name(workbook) -> dict:
 
 
 def main():
+    # We welcome the user
     print("Welcome to the Deadball League Generator!")
     workbook_name = get_workbook_name()
     workbook = xlsxwriter.Workbook(workbook_name)
     all_eras = [Era.ANCIENT, Era.MODERN]
     print("Please select the era for the league.")
     era = select(all_eras, lambda val: val.value)
-    all_genders = [League_Gender.COED, League_Gender.FEMALE, League_Gender.MALE]
     os.system("cls")
+    #The user then selects the league gender.
+    all_genders = [League_Gender.COED, League_Gender.FEMALE, League_Gender.MALE]
     print("Please select the gender for the league")
     gender = select(all_genders, lambda val: val.value)
+    # we create a new league.
     league = League(workbook_name, era, gender)
     os.system("cls")
+    # We then loop through the process of creating a new team and creating a worksheet untill the user quits.
     while True:
         team_name_dict = get_team_name(workbook)
-        h_stars = league.new_team(
-            team_name_dict.get("city"), team_name_dict.get("name")
-        )
-        new_team(h_stars, era, workbook)
+        team = league.new_team(team_name_dict.get("city"), team_name_dict.get("name"))
+        new_team(team, workbook)
         # We asks the user if they would like to add another team to the league.
         if not confirm("Would you like to add another team to the league?"):
             break

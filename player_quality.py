@@ -1,14 +1,17 @@
+''' Player Quality is used during player generation, to determine if a player is a batter or pitcher, and how good the player will be'''
+
 from enum import Enum
 
 
-# Determines if a pitcher will get better results on average, with Prospect considered a higher quality player.
 class Pitcher_Quality(Enum):
+    '''Used to generate pitchers. Players generated with PROSPECT will tend to have higher pitch dice and more traits '''
     PROSPECT = 1
     FARMHAND = 2
 
 
 # Similar to Pitcher Quality but for Batters
 class Batter_Quality(Enum):
+    '''Used to generate batters. Players generated with PROSPECT have higher bt and more traits.'''
     PROSPECT = 1
     FARMHAND = 2
 

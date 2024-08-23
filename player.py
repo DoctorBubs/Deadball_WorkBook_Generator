@@ -1,23 +1,28 @@
+""" Players are  the people who make up teams. They may be pitchers or batters, and are customized in a variety of different ways."""
+
 from enum import Enum
 from rpg_dice import roll
-from league_data import Era, League_Gender
-from b_traits import BTrait, get_random_BTrait, sort_BTrait
-from p_traits import PTrait, get_random_PTrait, sort_PTrait, conflicting_PTrait
 import names
-from pd import PitchDie, get_pitch_die
+from league_data import Era, League_Gender
+from b_traits import BTrait, get_random_btrait, sort_btrait
+from p_traits import PTrait, get_random_ptrait, sort_ptrait, conflicting_ptrait
+
+from pd import get_pitch_die
 from player_quality import Batter_Quality, Pitcher_Quality, Player_Quality
 
 
-# AgeCate is an enum which is used for calculating a players age, with each value representing a different level of experience.
 class AgeCat(Enum):
+    """AgeCat is an enum which is used for calculating a players age,
+    with each value representing a different level of experience."""
+
     PROSPECT = 1
     ROOKIE = 2
     VETERAN = 3
     OLDTIMER = 4
 
 
-# Generates a players age based off AgeCat
 def generate_age(age_cat: AgeCat) -> int:
+    """Generates a players age based off AgeCat"""
     # We roll a d6 to
     age_roll = roll("1d6")
     # And then match the result to determin an age
@@ -32,12 +37,12 @@ def generate_age(age_cat: AgeCat) -> int:
             return 32 + age_roll
 
 
-# Assisng a player to a random age
 def random_age() -> int:
+    """Assisgns a player to a random age"""
     age_roll = roll("1d6")
     # This will latter become an AgeCat value
     age_cat = None
-    # We look through various ranges to find a match to determine age_cat
+    # We look through various ranges to find a match to determine age_cat.
     if age_roll in range(1, 3):
         age_cat = AgeCat.PROSPECT
     elif age_roll in range(3, 5):
@@ -50,6 +55,7 @@ def random_age() -> int:
 
 
 def get_batter_bt(quality: Batter_Quality) -> int:
+    """Generates a batting target for a batter based off it's Batter_Quality."""
     match quality:
         case Batter_Quality.PROSPECT:
             return roll("2d10") + 15
@@ -58,6 +64,7 @@ def get_batter_bt(quality: Batter_Quality) -> int:
 
 
 def get_walk_rate(quality: Player_Quality) -> int:
+    """Generates a walk rate for a player based of whether or not it is a pitcher."""
     match quality:
         case Batter_Quality():
             return roll("2d4")
@@ -66,7 +73,7 @@ def get_walk_rate(quality: Player_Quality) -> int:
 
 
 def generate_bt(quality: Player_Quality) -> int:
-
+    """Generates a players bt based off whether or not it is a pitcher"""
     match quality:
         case Batter_Quality():
             return get_batter_bt(quality)
@@ -74,12 +81,11 @@ def generate_bt(quality: Player_Quality) -> int:
             return roll("2d6") + 12
 
 
-def time_2(num):
-    return 3
-
-
-# As in real baseball, whether a player is left handed, right handed, or a switch hitter is important. We create an enum.
 class Hand(Enum):
+    """#As in real baseball, whether a player is left handed, 
+    right handed, or a switch hitter is important,
+    which here is represented by an enum."""
+
     L = "L"
     R = "R"
     S = "S"
@@ -88,22 +94,25 @@ class Hand(Enum):
         return str(self.value)
 
 
-hand_array = []
+## Since players hands are generated at random, we create a list to aid in the generation.
+hand_list = []
 
-# we fill the hand_array with 7 instances of Hand.R
+# we fill the hand_list with 7 instances of Hand.R
 for _ in range(7):
-    hand_array.append(Hand.R)
+    hand_list.append(Hand.R)
 
 # And 4 instances of Hand.L
 for _ in range(4):
-    hand_array.append(Hand.L)
+    hand_list.append(Hand.L)
 
 
 def get_batter_hand(quality: Player_Quality) -> Hand:
+    """Determines what hand a player uses."""
     # We roll a d10
     hand_roll = roll("1d10")
     match hand_roll:
-        # Rolling a 10 is a special action. If the player is a self. then the self will be a switch hitter,otherwise the self will be a lefty
+        #Rolling a 10 is a special action. If the player is a batter,
+        #then the batter will be a switch hitter,otherwise the batter will be a lefty '''
         case 10:
             match quality:
                 case Batter_Quality():
@@ -111,12 +120,16 @@ def get_batter_hand(quality: Player_Quality) -> Hand:
                 case Pitcher_Quality():
                     return Hand.L
         case _:
-            # If the roll does not equal 10, we subtract 1 from the hand roll amd return the corresponding value from the hand array, and we return righty if the value doesn't exist
-            return hand_array[hand_roll - 1] or Hand.R
+            #If the roll does not equal 10, we subtract 1 from the hand roll
+              #and return the corresponding value from the hand array, and we return righty if the value doesn't exist
+            return hand_list[hand_roll - 1] or Hand.R
 
 
 class Player:
+    """The player class"""
+
     def new_name(self, gender: League_Gender):
+        """Generates a name for a player based off League_Gender"""
         self.last_name = names.get_last_name()
         match gender:
             case League_Gender.MALE:
@@ -129,38 +142,47 @@ class Player:
     def __init__(
         self, era: Era, gender: League_Gender, quality: Player_Quality, pos: str
     ) -> None:
+        # First we generate a players bt,walk rate, obt, and hand.
         self.bt = generate_bt(quality)
         self.walk_rate = get_walk_rate(quality)
         self.obt = self.bt + self.walk_rate
         self.hand = get_batter_hand(quality)
+        # Then we generate the player's gender and age.
         self.new_name(gender)
         self.age = random_age()
         self.pos = pos
+        # We generate traits for the player, which varies depending if the player is a pitcher or batter
+
         self.traits = []
         match quality:
             case Pitcher_Quality():
+                # If a player is a pitcher, we generate it's piutch die and a potential pitching trait.
                 self.pitch_die = get_pitch_die(era, quality)
-                first_trait = get_random_PTrait()
+                first_trait = get_random_ptrait()
                 self.traits.append(first_trait)
                 match quality:
+                    # If the pitcher is a farmhand, they roll for a trail only once.
                     case Pitcher_Quality.FARMHAND:
                         pass
+                    # Otherwise, if the pitcher received a trait on the first roll, it rolls for another trait.
                     case Pitcher_Quality.PROSPECT:
                         match first_trait:
                             case PTrait.NONE:
                                 pass
                             case _:
-                                second_trait = get_random_PTrait()
-                                trait_conflict = conflicting_PTrait(
+                                second_trait = get_random_ptrait()
+                                # We check to make sure the second trait doesn't conflict with the first trait.
+                                trait_conflict = conflicting_ptrait(
                                     first_trait, second_trait
                                 )
                                 if trait_conflict:
                                     pass
                                 else:
+                                    # If there is no conflict, the second trait is added to the trait list, which is sorted.
                                     self.traits.append(second_trait)
-                                    self.traits.sort(reverse=True, key=sort_PTrait)
+                                    self.traits.sort(reverse=True, key=sort_ptrait)
             case Batter_Quality():
-                first_trait = get_random_BTrait()
+                first_trait = get_random_btrait()
                 self.traits.append(first_trait)
                 # If the batter is a prospect, the batter gets a second chance to gain a trait if the batter gained one on the first roll
                 match quality:
@@ -173,23 +195,17 @@ class Player:
                                 pass
                             case _:
                                 # Otherwise, a second trait is found, and if it is not in the same category as the first, it is added to the trait list.
-                                second_trait = get_random_BTrait()
+                                second_trait = get_random_btrait()
                                 if (
                                     second_trait.value.category
                                     != first_trait.value.category
                                 ):
                                     self.traits.append(second_trait)
                                     # The trait list is sorted so positive traits show first
-                                    self.traits.sort(reverse=True, key=sort_BTrait)
-
-    def get_pd_string(self) -> str | None:
-        if self.pitch_die:
-
-            return str(self.pitch_die)
-        else:
-            return None
+                                    self.traits.sort(reverse=True, key=sort_btrait)
 
     def get_pitching_trait_string(self) -> str:
+        """Converts a pitcher's trait list to a string."""
         result = None
         for trait in self.traits:
             if result:
@@ -199,6 +215,7 @@ class Player:
         return result
 
     def get_pitching_info(self) -> list:
+        """Returns a list of a pitcher's data to be used on a worksheet."""
         return [
             self.pos,
             self.first_name + " " + self.last_name,
@@ -211,15 +228,17 @@ class Player:
         ]
 
     def get_batting_trait_string(self) -> str:
+        """Converts a batter's trait list to a string."""
         result = None
         for trait in self.traits:
             if result:
-                result += trait.value.str
+                result += trait.value.string
             else:
-                result = trait.value.str
+                result = trait.value.string
         return result
 
     def get_batting_info(self) -> list:
+        """Returns a list of a hitter's data to be used on a worksheet."""
         return [
             self.pos,
             self.first_name + " " + self.last_name,

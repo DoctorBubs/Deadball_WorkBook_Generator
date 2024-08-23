@@ -1,5 +1,7 @@
+''' Teams generate new players and organize them in lists such as bullpen and starting lineup.'''
+
 from player import Player
-from player_quality import Batter_Quality, Pitcher_Quality, Player_Quality
+from player_quality import Batter_Quality, Pitcher_Quality
 from league_data import Era, League_Gender
 
 lineup_strings = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
@@ -10,14 +12,17 @@ ancient_bench_strings = ["C", "INF", "OF", "UT"]
 
 
 def sort_bt(player: Player):
+    '''Sorts players by their bt'''
     return player.bt
 
 
 def sort_pd(player: Player):
+    '''Sorts batter by their bt.'''
     return player.pitch_die.value
 
 
 class Team:
+    '''The Team object. When generated, it also generates many players based off the era and gender.'''
     def __init__(self, city: str, name: str, era: Era, gender: League_Gender) -> None:
         self.name = name
         self.city = city

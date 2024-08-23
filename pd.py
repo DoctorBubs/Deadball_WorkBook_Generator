@@ -1,11 +1,14 @@
-from enum import Enum
+'''Pitchers in deadball have pitch dice'''
 
-from league_data import Era
+from enum import Enum
 from rpg_dice import roll
-from player_quality import Batter_Quality, Pitcher_Quality, Player_Quality
+from league_data import Era
+from player_quality import Pitcher_Quality
 
 
 class PitchDie(Enum):
+    ''' A pitcher's pitchdie. The value of each enum corresponds to max value 
+    away from zero that the die is capable of. Higher is better!'''
     d20 = 20
     d12 = 12
     d8 = 8
@@ -18,24 +21,27 @@ class PitchDie(Enum):
     def __str__(self) -> str:
         return str(self.value)
 
-
+# These ranges are used when generating a pitch die based off modern setting.
 modern_d8_range = range(2, 4)
 modern_d4_range = range(4, 8)
 
 
 def new_modern_die(off_set: int) -> PitchDie:
+    '''Generates a modern pitch die based off modern rules, with off_set limiting the best result possible.'''
     pitch_roll = roll("1d8") + off_set
     match pitch_roll:
         case 1:
             return PitchDie.d12
+        # Otherwise, we search the modern die ranges to see if we can find the roll.
         case pitch_roll if pitch_roll in modern_d8_range:
             return PitchDie.d8
         case pitch_roll if pitch_roll in modern_d4_range:
             return PitchDie.d4
         case _:
+            # If we haven't, then we return the d8.
             return PitchDie.d8
 
-
+# These r
 ancient_ranges = [
     {
         "die": PitchDie.d12,
@@ -58,20 +64,25 @@ ancient_ranges = [
 
 
 def new_ancient_die(off_set: int) -> PitchDie:
+    '''Generates an pitch die based off ancient rules, with off_set limiting the best result possible.'''
     pitch_roll = roll("1d12") + off_set
     match pitch_roll:
+        # If the roll = 1, the pitchdie will be D20.
         case 1:
             return PitchDie.d20
         case _:
+            # Otherwise, we loop ancient range. If the pitch_roll is found in the range, then the corresponsding die is returned.
             result = None
-            for dict in ancient_ranges:
-                if pitch_roll in dict.get("range"):
-                    result = dict.get("die")
+            for range_dict in ancient_ranges:
+                if pitch_roll in range_dict.get("range"):
+                    result = range_dict.get("die")
                     break
+            #If we have not found a pitch die at this point, the d8 is returned.
             return result or PitchDie.md8
 
 
 def get_pitch_die(era: Era, quality: Pitcher_Quality) -> PitchDie:
+    '''Generates a pitch die based off era and quality.'''
     off_set = None
     match quality:
         case Pitcher_Quality.PROSPECT:
