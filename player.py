@@ -24,20 +24,21 @@ def generate_age(age_cat: AgeCat) -> int:
       case AgeCat.VETERAN:
          return 26 + age_roll
       case AgeCat.OLDTIMER:
-         return 32 + roll
+         return 32 + age_roll
+      
 # Assisng a player to a random age
 def random_age() -> int:
    age_roll = roll("1d6")
    #This will latter become an AgeCat value
-   age_cat = 0
+   age_cat = None
    # We look through various ranges to find a match to determine age_cat
-   if age_roll in {1, 2}:
+   if age_roll in range(1,3):
       age_cat = AgeCat.PROSPECT
-   elif roll in {3, 4}:
+   elif age_roll in range(3,5):
         age_cat =  AgeCat.ROOKIE
-   elif roll == 5:
+   elif age_roll == 5:
         age_cat =  AgeCat.VETERAN
-   elif roll == 6:
+   elif age_roll == 6:
         age_cat = AgeCat.OLDTIMER
    return generate_age(age_cat)
 
@@ -129,10 +130,11 @@ class Player:
        self.hand = get_batter_hand(quality)
        self.new_name(gender)
        self.age = random_age()
+       self.pos = pos
        match quality:
           case Pitcher_Quality():
              self.pitch_die = get_pitch_die(era,quality)
-             self.player_type = "Pitcher"
+             
        
     def get_pd_string(self) -> str | None:
        if self.pitch_die:

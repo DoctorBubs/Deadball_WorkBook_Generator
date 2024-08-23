@@ -44,7 +44,7 @@ class Team:
                 for _ in range(6):
                     new_starting_pitcher = Player(era,gender,Pitcher_Quality.PROSPECT,"SP")
                     pitching_score += new_starting_pitcher.pitch_die.value
-                    self.starting_lineup.append(new_starting_pitcher)
+                    self.starting_rotation.append(new_starting_pitcher)
                 self.bullpen = []
                 for _ in range(8):
                     new_reliever = Player(era,gender,Pitcher_Quality.PROSPECT,"RP")
