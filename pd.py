@@ -14,6 +14,13 @@ class PitchDie(Enum):
     md4 = -4
     md8 = -8
 
+    def __str__(self) -> str:
+        if self.value == 0:
+            return "No Dice"
+        elif self.value > 0:
+            return "d" + str(self.value)
+        else:
+            return "-d" + str(self.value)
 modern_d8_range = range(2,4)
 modern_d4_range = range(4,8)
 
@@ -60,7 +67,7 @@ def new_ancient_die(off_set: int) -> PitchDie:
         case 1:
             return PitchDie.d20
         case _:
-            result
+            result = None
             for dict in ancient_ranges:
                 if pitch_roll in dict.get("range"):
                     result = dict.get("die")
@@ -68,15 +75,15 @@ def new_ancient_die(off_set: int) -> PitchDie:
             return result or PitchDie.md8
 
 def get_pitch_die(era: Era, quality: Pitcher_Quality) -> PitchDie:
-    off_set
+    off_set = None
     match quality:
         case Pitcher_Quality.PROSPECT:
             off_set = 0
         case Pitcher_Quality.FARMHAND:
             off_set = 2
     match era:
-        case Era.MODERN():
+        case Era.MODERN:
             return new_modern_die(off_set)
-        case era.ANCIENT():
+        case Era.ANCIENT:
             return new_ancient_die(off_set)
     

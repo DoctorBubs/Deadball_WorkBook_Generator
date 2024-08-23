@@ -131,7 +131,14 @@ class Player:
        self.age = random_age()
        match quality:
           case Pitcher_Quality():
-             self.pitch_die = get_pitch_die(quality)
+             self.pitch_die = get_pitch_die(era,quality)
              self.player_type = "Pitcher"
        
+    def get_pd_string(self) -> str | None:
+       if self.pitch_die:
+          print("player has a pitch die")
+          return str(self.pitch_die) 
+       else:
+          return None
 
+      
