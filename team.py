@@ -31,21 +31,29 @@ class Team:
             batting_score += new_bench_batter.bt
             self.bench.append(new_bench_batter)
         self.bench.sort(key = sort_bt, reverse = True)
+        pitching_score = 0
         match era:
             case Era.ANCIENT:
                 self.pitchers = []
                 for _ in range(6):
                     new_pitcher = Player(era,gender,Pitcher_Quality.PROSPECT,"P")
+                    pitching_score += new_pitcher.pitch_die.value
                     self.pitchers.append(new_pitcher)
             case _:
                 self.starting_rotation = []
                 for _ in range(6):
                     new_starting_pitcher = Player(era,gender,Pitcher_Quality.PROSPECT,"SP")
+                    pitching_score += new_starting_pitcher.pitch_die.value
                     self.starting_lineup.append(new_starting_pitcher)
                 self.bullpen = []
                 for _ in range(8):
                     new_reliever = Player(era,gender,Pitcher_Quality.PROSPECT,"RP")
+                    pitching_score += new_reliever.pitch_die.value
                     self.bullpen.append(new_reliever)
+        pitching_score = pitching_score * 7
+        self.pitching_score = pitching_score
+        self.batting_score = batting_score
+        self.team_score = (batting_score + pitching_score) / 10
         
 
         

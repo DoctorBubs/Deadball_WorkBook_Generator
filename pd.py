@@ -29,9 +29,9 @@ def new_modern_die(off_set: int) -> PitchDie:
     match pitch_roll:
         case 1:
             return PitchDie.d12
-        case modern_d8_range if pitch_roll in modern_d8_range:
+        case pitch_roll if pitch_roll in modern_d8_range:
             return PitchDie.d8
-        case modern_d4_range if pitch_roll in modern_d4_range:
+        case pitch_roll if pitch_roll in modern_d4_range:
             return PitchDie.d4
         case _:
             return PitchDie.d8
