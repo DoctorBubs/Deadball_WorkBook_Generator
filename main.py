@@ -8,17 +8,23 @@ import xlsxwriter
 batting_headers = ["Pos","Name","Hand","BT","OBT", "Age"]
 pitching_headers = ["Pos","Name","Hand","PD","BT","OBT","Age"]
 
-
+# Adds a new team to the workbook under a new worksheet
 def new_team(city: str, name: str, era: Era, gender: League_Gender,workbook):
+    # We name the worksheet  after a comnibation of the team's city and nickname
     worksheet = workbook.add_worksheet(city + " " + name)
+    # We then generatate a team object based off the paramaters
     team = Team(city,name,era,gender)
+    # We write to the worksheet headers for the most important info regarding the team.
     worksheet.write('A1', 'City')
     worksheet.write('B1', 'Team Name')
     worksheet.write('C1', 'Batting Score')
     worksheet.write('D1', 'Pitching Score')
     worksheet.write('E1','Team Score')
+    # Some of the team data is already known to us, so we put that data in a list.
     base_team_info = [team.city, team.name]
+    # Column is a number that marks which column to write data to. The number increases over time as we add more data.
     column = 0
+    # We write 
     for data in base_team_info:
         worksheet.write(1,column,data)
         column += 1
@@ -80,6 +86,7 @@ def new_team(city: str, name: str, era: Era, gender: League_Gender,workbook):
                     worksheet.write(column,row,info)
                 column += 1
             worksheet.write('D2','=SUM(D28:D32,D36:D42) * 7')
+
 def main():
  
     
