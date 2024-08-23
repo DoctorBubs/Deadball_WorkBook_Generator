@@ -1,7 +1,8 @@
 from enum import Enum
 from rpg_dice import roll
 from league import Era, League_Gender
-from b_traits import BTrait, get_random_trait,sort_BTrait
+from b_traits import BTrait, get_random_BTrait,sort_BTrait
+from p_traits import PTrait,get_random_PTrait,sort_PTrait,conflicting_PTrait
 import names
 from pd import PitchDie,get_pitch_die
 from player_quality import Batter_Quality,Pitcher_Quality,Player_Quality
@@ -133,17 +134,42 @@ class Player:
        match quality:
           case Pitcher_Quality():
              self.pitch_die = get_pitch_die(era,quality)
-          case Batter_Quality():
-             first_trait = get_random_trait()
+             first_trait = get_random_PTrait()
              self.traits.append(first_trait)
-             match first_trait:
-                case BTrait.NONE:
-                  pass
-                case _ :
-                        second_trait = get_random_trait()
-                        if second_trait != first_trait and second_trait.value.category != first_trait.value.category:
-                         self.traits.append(second_trait)
-                         self.traits.sort(reverse = True, key = sort_BTrait)
+             match quality:
+                case Pitcher_Quality.FARMHAND:
+                   pass
+                case Pitcher_Quality.PROSPECT:
+                   match first_trait:
+                      case PTrait.NONE:
+                         pass
+                      case _:
+                         second_trait = get_random_PTrait()
+                         trait_conflict = conflicting_PTrait(first_trait,second_trait)
+                         if trait_conflict:
+                            pass
+                         else:
+                            self.traits.append(second_trait)
+                            self.traits.sort(reverse = True, key = sort_PTrait)
+          case Batter_Quality():
+             first_trait = get_random_BTrait()
+             self.traits.append(first_trait)
+             #If the batter is a prospect, the batter gets a second chance to gain a trait if the batter gained one on the first roll
+             match quality:
+                case Batter_Quality.FARMHAND:
+                   pass
+                case Batter_Quality.PROSPECT:
+                  # If the batter did not gain a trait, then pass.
+                  match first_trait:
+                     case BTrait.NONE:
+                        pass
+                     case _ :
+                              # Otherwise, a second trait is found, and if it is not in the same category as the first, it is added to the trait list.
+                              second_trait = get_random_BTrait()
+                              if  second_trait.value.category != first_trait.value.category:
+                                 self.traits.append(second_trait)
+                                 # The trait list is sorted so positive traits show first
+                                 self.traits.sort(reverse = True, key = sort_BTrait)
             
     def get_pd_string(self) -> str | None:
        if self.pitch_die:
@@ -152,10 +178,20 @@ class Player:
        else:
           return None
 
+    def get_pitching_trait_string(self) -> str:
+      result = None
+      for trait in self.traits:
+         if result:
+            result = result + str(trait)
+         else:
+            result = str(trait)
+      return result
     def get_pitching_info(self) -> list:
-      return [self.pos,self.first_name +" " + self.last_name,str(self.hand),self.pitch_die.value,self.bt,self.obt,self.age]
+      return [self.pos,self.first_name +" " + self.last_name,str(self.hand),self.pitch_die.value,self.get_pitching_trait_string(),self.bt,self.obt,self.age]
     
-    def get_trait_string(self) -> str:
+
+
+    def get_batting_trait_string(self) -> str:
        result = None
        for trait in self.traits:
           if result:
@@ -165,4 +201,4 @@ class Player:
        return result
    
     def get_batting_info(self) -> list:
-      return [self.pos,self.first_name +" " + self.last_name,str(self.hand),self.bt,self.obt,self.get_trait_string(),self.age]
+      return [self.pos,self.first_name +" " + self.last_name,str(self.hand),self.bt,self.obt,self.get_batting_trait_string(),self.age]

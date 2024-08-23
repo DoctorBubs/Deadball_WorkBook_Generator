@@ -27,7 +27,7 @@ class BTrait(Enum):
     TPlus = BTraitValue("T+","Durability",1)
 
 
-def get_random_trait() -> BTrait:
+def get_random_BTrait() -> BTrait:
     trait_roll = roll("2d10")
     match trait_roll:
         case 2:

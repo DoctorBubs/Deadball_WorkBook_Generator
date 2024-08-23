@@ -7,7 +7,7 @@ import xlsxwriter
 from beaupy import confirm, prompt, select, select_multiple
 team_headers = ["City","Team Name","Batting Score","Pitching Score","Team Score"]
 batting_headers = ["Position","Name","Hand","BT","OBT", "Traits","Age"]
-pitching_headers = ["Position","Name","Hand","PD","BT","OBT","Age"]
+pitching_headers = ["Position","Name","Hand","PD","Traits","BT","OBT","Age"]
 
 # Adds a new team to the workbook under a new worksheet
 def new_team(city: str, name: str, era: Era, gender: League_Gender,workbook):
