@@ -22,69 +22,69 @@ def new_team(city: str, name: str, era: Era, gender: League_Gender,workbook):
     worksheet.write('E1','Team Score')
     # Some of the team data is already known to us, so we put that data in a list.
     base_team_info = [team.city, team.name]
-    # Column is a number that marks which column to write data to. The number increases over time as we add more data.
-    column = 0
+    # current_row is a number that marks which current_row to write data to. The number increases over time as we add more data.
+    current_row = 1
     # We write 
-    for data in base_team_info:
-        worksheet.write(1,column,data)
-        column += 1
+    for column,data in enumerate(base_team_info):
+        worksheet.write(current_row,column,data)
+        
     worksheet.write('C2','=SUM(D7:D14,D19:D23)')
     worksheet.write('E2','=SUM(C2:D2) / 10')
 
     worksheet.write('B1', 'Starting Lineup')
     
-    for row,info in enumerate(batting_headers):
-        worksheet.write(5,row,info)
-    column = 6
+    for c,info in enumerate(batting_headers):
+        worksheet.write(5,c,info)
+    current_row = 6
     for batter in team.starting_lineup:
         batter_info = [batter.pos,batter.first_name +" " + batter.last_name,str(batter.hand),batter.bt,batter.obt,batter.age]
-        for row,data in enumerate(batter_info):
-            worksheet.write(column,row,data)
-        column += 1
-    worksheet.write(column + 2,0,"Bench")
-    column = column + 3
-    for row,info in enumerate(batting_headers):
-        worksheet.write(column,row,info)
-    column = column + 1
+        for column,data in enumerate(batter_info):
+            worksheet.write(current_row,column,data)
+        current_row += 1
+    worksheet.write(current_row + 2,0,"Bench")
+    current_row = current_row + 3
+    for column,info in enumerate(batting_headers):
+        worksheet.write(current_row,column,info)
+    current_row = current_row + 1
     for bench_batter in team.bench:
         bench_batter_info = [bench_batter.pos,bench_batter.first_name +" " + bench_batter.last_name,str(bench_batter.hand),bench_batter.bt,bench_batter.obt,bench_batter.age]
-        for row,data in enumerate(bench_batter_info):
-            worksheet.write(column,row,data)
-        column += 1
+        for column,data in enumerate(bench_batter_info):
+            worksheet.write(current_row,column,data)
+        current_row += 1
 
-    column += 2
+    current_row += 2
     
     match team.era:
         case Era.ANCIENT:
-            worksheet.write(column,0,"Pitchers")
-            for row,info in enumerate(pitching_headers):
-                worksheet.write(column,row,info)
-            column += 1
+            worksheet.write(current_row,0,"Pitchers")
+            for column,info in enumerate(pitching_headers):
+                worksheet.write(current_row,column,info)
+            current_row += 1
             for pitcher in team.pitchers:
                 pitcher_info = pitcher.get_pitching_info()
-                for row, data in enumerate(pitcher_info):
-                    worksheet.write(column,row,data)
-                column += 1
+                for column, data in enumerate(pitcher_info):
+                    worksheet.write(current_row,column,data)
+                current_row += 1
             worksheet.write('D2','= SUM(D26:D31) * 7')
         case Era.MODERN:
-            worksheet.write(column,0,"Starting Rotation")
-            column += 1
-            for row,info in enumerate(pitching_headers):
-                worksheet.write(column,row,info)
-            column += 1
+            worksheet.write(current_row,0,"Starting Rotation")
+            current_row += 1
+            for column,info in enumerate(pitching_headers):
+                worksheet.write(current_row,column,info)
+            current_row += 1
             for starting_pitcher in team.starting_rotation:
                 starting_pitcher_info = starting_pitcher.get_pitching_info()
-                for row,info in enumerate(starting_pitcher_info):
-                    worksheet.write(column,row,info)
-                column += 1
-            column += 2
-            worksheet.write(column,0,"Bullpen")
-            column += 1
+                for column,info in enumerate(starting_pitcher_info):
+                    worksheet.write(current_row,column,info)
+                current_row += 1
+            current_row += 2
+            worksheet.write(current_row,0,"Bullpen")
+            current_row += 1
             for reliever in team.bullpen:
                 reliever_info = reliever.get_pitching_info()
-                for row,info in enumerate(reliever_info):
-                    worksheet.write(column,row,info)
-                column += 1
+                for column,info in enumerate(reliever_info):
+                    worksheet.write(current_row,column,info)
+                current_row += 1
             worksheet.write('D2','=SUM(D28:D32,D36:D42) * 7')
 
 def main():
