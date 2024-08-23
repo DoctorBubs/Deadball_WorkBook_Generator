@@ -8,7 +8,7 @@ from b_traits import BTrait, get_random_btrait, sort_btrait
 from p_traits import PTrait, get_random_ptrait, sort_ptrait, conflicting_ptrait
 
 from pd import get_pitch_die
-from player_quality import Batter_Quality, Pitcher_Quality, Player_Quality
+from player_quality import BatterQuality, PitcherQuality, PlayerQuality
 
 
 class AgeCat(Enum):
@@ -54,35 +54,35 @@ def random_age() -> int:
     return generate_age(age_cat)
 
 
-def get_batter_bt(quality: Batter_Quality) -> int:
-    """Generates a batting target for a batter based off it's Batter_Quality."""
+def get_batter_bt(quality: BatterQuality) -> int:
+    """Generates a batting target for a batter based off it's BatterQuality."""
     match quality:
-        case Batter_Quality.PROSPECT:
+        case BatterQuality.PROSPECT:
             return roll("2d10") + 15
-        case Batter_Quality.FARMHAND:
+        case BatterQuality.FARMHAND:
             return roll("2d10") + 12
 
 
-def get_walk_rate(quality: Player_Quality) -> int:
+def get_walk_rate(quality: PlayerQuality) -> int:
     """Generates a walk rate for a player based of whether or not it is a pitcher."""
     match quality:
-        case Batter_Quality():
+        case BatterQuality():
             return roll("2d4")
-        case Pitcher_Quality():
+        case PitcherQuality():
             return roll("1d8")
 
 
-def generate_bt(quality: Player_Quality) -> int:
+def generate_bt(quality: PlayerQuality) -> int:
     """Generates a players bt based off whether or not it is a pitcher"""
     match quality:
-        case Batter_Quality():
+        case BatterQuality():
             return get_batter_bt(quality)
-        case Pitcher_Quality():
+        case PitcherQuality():
             return roll("2d6") + 12
 
 
 class Hand(Enum):
-    """#As in real baseball, whether a player is left handed, 
+    """#As in real baseball, whether a player is left handed,
     right handed, or a switch hitter is important,
     which here is represented by an enum."""
 
@@ -106,22 +106,22 @@ for _ in range(4):
     hand_list.append(Hand.L)
 
 
-def get_batter_hand(quality: Player_Quality) -> Hand:
+def get_batter_hand(quality: PlayerQuality) -> Hand:
     """Determines what hand a player uses."""
     # We roll a d10
     hand_roll = roll("1d10")
     match hand_roll:
-        #Rolling a 10 is a special action. If the player is a batter,
-        #then the batter will be a switch hitter,otherwise the batter will be a lefty '''
+        # Rolling a 10 is a special action. If the player is a batter,
+        # then the batter will be a switch hitter,otherwise the batter will be a lefty '''
         case 10:
             match quality:
-                case Batter_Quality():
+                case BatterQuality():
                     return Hand.S
-                case Pitcher_Quality():
+                case PitcherQuality():
                     return Hand.L
         case _:
-            #If the roll does not equal 10, we subtract 1 from the hand roll
-              #and return the corresponding value from the hand array, and we return righty if the value doesn't exist
+            # If the roll does not equal 10, we subtract 1 from the hand roll
+            # and return the corresponding value from the hand array, and we return righty if the value doesn't exist
             return hand_list[hand_roll - 1] or Hand.R
 
 
@@ -140,7 +140,7 @@ class Player:
                 self.first_name = names.get_first_name()
 
     def __init__(
-        self, era: Era, gender: League_Gender, quality: Player_Quality, pos: str
+        self, era: Era, gender: League_Gender, quality: PlayerQuality, pos: str
     ) -> None:
         # First we generate a players bt,walk rate, obt, and hand.
         self.bt = generate_bt(quality)
@@ -155,17 +155,17 @@ class Player:
 
         self.traits = []
         match quality:
-            case Pitcher_Quality():
+            case PitcherQuality():
                 # If a player is a pitcher, we generate it's piutch die and a potential pitching trait.
                 self.pitch_die = get_pitch_die(era, quality)
                 first_trait = get_random_ptrait()
                 self.traits.append(first_trait)
                 match quality:
                     # If the pitcher is a farmhand, they roll for a trail only once.
-                    case Pitcher_Quality.FARMHAND:
+                    case PitcherQuality.FARMHAND:
                         pass
                     # Otherwise, if the pitcher received a trait on the first roll, it rolls for another trait.
-                    case Pitcher_Quality.PROSPECT:
+                    case PitcherQuality.PROSPECT:
                         match first_trait:
                             case PTrait.NONE:
                                 pass
@@ -181,14 +181,14 @@ class Player:
                                     # If there is no conflict, the second trait is added to the trait list, which is sorted.
                                     self.traits.append(second_trait)
                                     self.traits.sort(reverse=True, key=sort_ptrait)
-            case Batter_Quality():
+            case BatterQuality():
                 first_trait = get_random_btrait()
                 self.traits.append(first_trait)
                 # If the batter is a prospect, the batter gets a second chance to gain a trait if the batter gained one on the first roll
                 match quality:
-                    case Batter_Quality.FARMHAND:
+                    case BatterQuality.FARMHAND:
                         pass
-                    case Batter_Quality.PROSPECT:
+                    case BatterQuality.PROSPECT:
                         # If the batter did not gain a trait, then pass.
                         match first_trait:
                             case BTrait.NONE:

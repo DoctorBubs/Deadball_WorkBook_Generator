@@ -6,27 +6,21 @@ from team import Team
 from league import League
 
 
-
-
-
-
+# These headers are used when writing on the worksheet.
 team_headers = ["City", "Team Name", "Batting Score", "Pitching Score", "Team Score"]
 batting_headers = ["Position", "Name", "Hand", "BT", "OBT", "Traits", "Age"]
 pitching_headers = ["Position", "Name", "Hand", "PD", "Traits", "BT", "OBT", "Age"]
 
 
-
 def new_team(team: Team, workbook) -> None:
-    '''Creates a worksheet in the workbook and fills it with data from the team and it's players.'''
-    # We name the worksheet  after a comnibation of the team's city and nickname
-    # worksheet = workbook.add_worksheet(city + " " + name)
+    """Creates a worksheet in the workbook and fills it with data from the team and it's players."""
 
+    # We create a worksheet based of the team's name and city.
     worksheet = workbook.add_worksheet(team.city + " " + team.name)
-    # We then generatate a team object based off the paramaters
-    # team = Team(city,name,era,gender)
-    # We write to the worksheet headers for the most important info regarding the team.
+
     # current_row is a number that marks which row to write data to. The number increases over time as we add more data.
     current_row = 0
+    # We write the team headers on the top of the file.
     for column, data in enumerate(team_headers):
         worksheet.write(current_row, column, data)
     current_row = 1
@@ -118,7 +112,7 @@ def new_team(team: Team, workbook) -> None:
 
 
 def valid_workbook_name(user_input: str) -> bool:
-    '''Determines if a user generated workbook is not in use by a workbook in the folder.'''
+    """Determines if a user generated workbook is not in use by a workbook in the folder."""
     test_path = user_input + ".xlsx"
     if os.path.exists(test_path):
         return False
@@ -127,7 +121,7 @@ def valid_workbook_name(user_input: str) -> bool:
 
 
 def get_workbook_name() -> str:
-    '''Prompts the user for a unique workbook name that is not already in use in the folder.'''
+    """Prompts the user for a unique workbook name that is not already in use in the folder."""
     user_input = prompt(
         "Please enter the file name you would like to save the new league under."
     )
@@ -146,7 +140,7 @@ def get_workbook_name() -> str:
 
 
 def get_team_name(workbook) -> dict:
-    '''Returns a dict containing a city and team name, while also ensuring their is not already a worksheet with the same combo'''
+    """Returns a dict containing a city and team name, while also ensuring their is not already a worksheet with the same combo."""
     while True:
         city_input = prompt("Please enter the name of the city for the new team.")
         name_input = prompt("Please enter the name of the new team.")
@@ -162,6 +156,7 @@ def get_team_name(workbook) -> dict:
 
 
 def main():
+    """The main function. It is called when the script runs."""
     # We welcome the user
     print("Welcome to the Deadball League Generator!")
     workbook_name = get_workbook_name()
@@ -170,7 +165,7 @@ def main():
     print("Please select the era for the league.")
     era = select(all_eras, lambda val: val.value)
     os.system("cls")
-    #The user then selects the league gender.
+    # The user then selects the league gender.
     all_genders = [League_Gender.COED, League_Gender.FEMALE, League_Gender.MALE]
     print("Please select the gender for the league")
     gender = select(all_genders, lambda val: val.value)

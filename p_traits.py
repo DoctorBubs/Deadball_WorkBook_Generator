@@ -1,11 +1,12 @@
-'''PTrait determine what traits a pitcher has.'''
+"""PTrait determine what traits a pitcher has."""
+
 from enum import Enum
 from rpg_dice import roll
 
 
-
 class PTrait(Enum):
-    '''This enun represents a pitchers trait. NONE represents no trait.'''
+    """This enun represents a pitchers trait. NONE represents no trait."""
+
     CNMINUS = "CN-"
     KPLUS = "K+"
     GBPLUS = "GB+"
@@ -18,7 +19,7 @@ class PTrait(Enum):
 
 
 def get_random_ptrait() -> PTrait:
-    '''Generates a random PTrait'''
+    """Generates a random PTrait"""
     trait_roll = roll("2d10")
     match trait_roll:
         case 5:
@@ -36,7 +37,7 @@ def get_random_ptrait() -> PTrait:
 
 
 def sort_ptrait(trait: PTrait) -> int:
-    '''Sorts PTraits. CMINUS = -1, NONE = 0, all others = 1'''
+    """Sorts PTraits. CMINUS = -1, NONE = 0, all others = 1"""
     match trait:
         case PTrait.CNMINUS:
             return -1
@@ -46,12 +47,12 @@ def sort_ptrait(trait: PTrait) -> int:
             return 1
 
 
-# Unlike batting traits, only 2 pitching trains contracdict eachother, CNMINUS and CNPLUS.
+# Unlike batting traits, only 2 pitching trains contradict each other, CNMINUS and CNPLUS.
 command_traits = [PTrait.CNMINUS, PTrait.CNPLUS]
 
 
 def conflicting_ptrait(trait_a: PTrait, trait_b: PTrait) -> bool:
-    ''' To determine if there is a conflict between two pitching traits,
-     we check if both traits are related to command.
-     If they are, their is a conflict'''
+    """To determine if there is a conflict between two pitching traits,
+    we check if both traits are related to command.
+    If they are, their is a conflict"""
     return trait_a in command_traits and trait_b in command_traits
