@@ -39,17 +39,21 @@ class Team:
                     new_pitcher = Player(era,gender,Pitcher_Quality.PROSPECT,"P")
                     pitching_score += new_pitcher.pitch_die.value
                     self.pitchers.append(new_pitcher)
+                self.pitchers.sort(key = sort_pd, reverse = True)
             case _:
                 self.starting_rotation = []
                 for _ in range(6):
                     new_starting_pitcher = Player(era,gender,Pitcher_Quality.PROSPECT,"SP")
                     pitching_score += new_starting_pitcher.pitch_die.value
                     self.starting_rotation.append(new_starting_pitcher)
+                self.starting_rotation.sort(key = sort_pd, reverse = True)
                 self.bullpen = []
                 for _ in range(8):
                     new_reliever = Player(era,gender,Pitcher_Quality.PROSPECT,"RP")
                     pitching_score += new_reliever.pitch_die.value
-                    self.bullpen.append(new_reliever)
+                self.bullpen.append(new_reliever)
+                self.bullpen.sort(key = sort_pd, reverse = True)
+
         pitching_score = pitching_score * 7
         self.pitching_score = pitching_score
         self.batting_score = batting_score

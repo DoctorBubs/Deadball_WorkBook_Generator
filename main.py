@@ -15,7 +15,7 @@ def main():
     workbook = xlsxwriter.Workbook('hello.xlsx')
     worksheet = workbook.add_worksheet()
 
-    test_team = Team("Hollywood","Stars",Era.MODERN, League_Gender.MALE)
+    test_team = Team("Hollywood","Stars",Era.ANCIENT, League_Gender.MALE)
     worksheet.write('A1', 'City')
     worksheet.write('B1', 'Team Name')
     worksheet.write('C1', 'Batting Score')
@@ -27,7 +27,7 @@ def main():
         worksheet.write(1,column,data)
         column += 1
     worksheet.write('C2','=SUM(D7:D14,D19:D23)')
-    
+    worksheet.write('E2','=SUM(C2:D2) / 10)')
 
     worksheet.write('B1', 'Starting Lineup')
     batting_headers = ["Pos","Name","Hand","BT","OBT", "Age"]
@@ -49,6 +49,21 @@ def main():
         for row,data in enumerate(bench_batter_info):
             worksheet.write(column,row,data)
         column += 1
+
+    column += 2
+    pitching_headers = ["Pos","Name","Hand","PD","BT","OBT","Age"]
+    match test_team.era:
+        case Era.ANCIENT:
+            worksheet.write(column,0,"Pitchers")
+            for row,info in enumerate(pitching_headers):
+                worksheet.write(column,row,info)
+            column += 1
+            for pitcher in test_team.pitchers:
+                pitcher_info = [pitcher.pos,pitcher.first_name +" " + pitcher.last_name,str(pitcher.hand),pitcher.pitch_die.value,pitcher.bt,pitcher.obt,pitcher.age]
+                for row, data in enumerate(pitcher_info):
+                    worksheet.write(column,row,data)
+                column += 1
+            worksheet.write('D2','= SUM(D26:D31) * 7')
     workbook.close()
 
   

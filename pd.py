@@ -15,12 +15,7 @@ class PitchDie(Enum):
     md8 = -8
 
     def __str__(self) -> str:
-        if self.value == 0:
-            return "No Dice"
-        elif self.value > 0:
-            return "d" + str(self.value)
-        else:
-            return "-d" + str(self.value)
+        return str(self.value)
 modern_d8_range = range(2,4)
 modern_d4_range = range(4,8)
 
