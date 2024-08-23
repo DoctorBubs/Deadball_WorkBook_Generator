@@ -1,6 +1,6 @@
-
 from rpg_dice import roll
 from enum import Enum
+
 
 class PTrait(Enum):
     CNMINUS = "CN-"
@@ -9,15 +9,17 @@ class PTrait(Enum):
     CNPLUS = "C+"
     STPLUS = "ST+"
     NONE = ""
+
     def __str__(self) -> str:
         return self.value
+
 
 def get_random_PTrait() -> PTrait:
     trait_roll = roll("2d10")
     match trait_roll:
         case 5:
             return PTrait.CNMINUS
-        case 15: 
+        case 15:
             return PTrait.KPLUS
         case 16:
             return PTrait.GBPLUS
@@ -27,7 +29,8 @@ def get_random_PTrait() -> PTrait:
             return PTrait.STPLUS
         case _:
             return PTrait.NONE
-    
+
+
 def sort_PTrait(trait: PTrait) -> int:
     match trait:
         case PTrait.CNMINUS:
@@ -36,8 +39,11 @@ def sort_PTrait(trait: PTrait) -> int:
             return 0
         case _:
             return 1
+
+
 # Unlike batting traits, only 2 pitching trains contracdict eachother, CNMINUS and CNPLUS.
-command_traits = [PTrait.CNMINUS,PTrait.CNPLUS]
+command_traits = [PTrait.CNMINUS, PTrait.CNPLUS]
+
 
 # To determine if there is a conflict between two pitching traits, we check if both traits are related to command
 # If they are, their is a conflict

@@ -1,9 +1,10 @@
-
 from enum import Enum
 
 from league_data import Era
 from rpg_dice import roll
-from player_quality import Batter_Quality,Pitcher_Quality,Player_Quality
+from player_quality import Batter_Quality, Pitcher_Quality, Player_Quality
+
+
 class PitchDie(Enum):
     d20 = 20
     d12 = 12
@@ -16,8 +17,11 @@ class PitchDie(Enum):
 
     def __str__(self) -> str:
         return str(self.value)
-modern_d8_range = range(2,4)
-modern_d4_range = range(4,8)
+
+
+modern_d8_range = range(2, 4)
+modern_d4_range = range(4, 8)
+
 
 def new_modern_die(off_set: int) -> PitchDie:
     pitch_roll = roll("1d8") + off_set
@@ -30,7 +34,7 @@ def new_modern_die(off_set: int) -> PitchDie:
             return PitchDie.d4
         case _:
             return PitchDie.d8
- 
+
 
 ancient_ranges = [
     {
@@ -49,12 +53,9 @@ ancient_ranges = [
         "die": PitchDie.d4,
         "range": range(9, 11),
     },
-    {
-        "die": PitchDie.md4,
-        "range": range(12,14)
-    }
+    {"die": PitchDie.md4, "range": range(12, 14)},
 ]
-           
+
 
 def new_ancient_die(off_set: int) -> PitchDie:
     pitch_roll = roll("1d12") + off_set
@@ -69,6 +70,7 @@ def new_ancient_die(off_set: int) -> PitchDie:
                     break
             return result or PitchDie.md8
 
+
 def get_pitch_die(era: Era, quality: Pitcher_Quality) -> PitchDie:
     off_set = None
     match quality:
@@ -81,4 +83,3 @@ def get_pitch_die(era: Era, quality: Pitcher_Quality) -> PitchDie:
             return new_modern_die(off_set)
         case Era.ANCIENT:
             return new_ancient_die(off_set)
-    
