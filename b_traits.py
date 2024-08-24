@@ -3,7 +3,12 @@ from rpg_dice import roll
 
 
 class BTraitValue:
-    """Value used for the BTrait enum, used to compare traits."""
+    """Value used for the BTrait enum, used to compare traits.
+    It contains a string field that is used for writing a value to text.
+    It also contains a categroy string that determines what type of trait the value is for,
+    E.G power or defense.
+    It also contains a number field, which is used to sort traits in a
+    players trait list. A higher number is better."""
 
     def __init__(self, string: str, category: str, number: int) -> None:
         self.string = string
@@ -12,7 +17,10 @@ class BTraitValue:
 
 
 class BTrait(Enum):
-    """BTraits are the traits that only batters have, such as increased speed or lowered defense."""
+    """BTraits are the traits that only batters have, such as increased speed or lowered defense.
+    A BTrait that ends in PLUS means a player is above average, and MINUS means a player is below average.
+    Power also has a variant with a double plus, which indicates that a batter is a super power hitter
+    """
 
     PMINUSMINUS = BTraitValue("P--", "Power", -2)
     PMINUS = BTraitValue("P-", "Power", -1)

@@ -7,7 +7,7 @@ from league_data import Era, League_Gender
 from b_traits import BTrait, get_random_btrait, sort_btrait
 from p_traits import PTrait, get_random_ptrait, sort_ptrait, conflicting_ptrait
 
-from pd import get_pitch_die
+from pd import get_pitch_die, PitchDie
 from player_quality import BatterQuality, PitcherQuality, PlayerQuality
 
 
@@ -143,20 +143,28 @@ class Player:
         self, era: Era, gender: League_Gender, quality: PlayerQuality, pos: str
     ) -> None:
         # First we generate a players bt,walk rate, obt, and hand.
+        # bt is short for batting target. In real life baseball, it corresponds to a players batting average.
         self.bt = generate_bt(quality)
+        # walk rate is how often a player's walks, as in real life baseball
         self.walk_rate = get_walk_rate(quality)
+        """obt is short ofr on base target. It corresponds to a real life player OBP, and is calulated by adding a
+        players bt and walkrate."""
         self.obt = self.bt + self.walk_rate
+        """ We determine if a player bats and/or pitches right handed or left handed. 
+        Batters can also be switch hitters, but not pitchers"""
         self.hand = get_batter_hand(quality)
         # Then we generate the player's gender and age.
         self.new_name(gender)
         self.age = random_age()
+        """ We also define a players pos, which is short for position in the field.
+        """
         self.pos = pos
         # We generate traits for the player, which varies depending if the player is a pitcher or batter
 
         self.traits = []
         match quality:
             case PitcherQuality():
-                # If a player is a pitcher, we generate it's piutch die and a potential pitching trait.
+                # If a player is a pitcher, we generate it's pitch die and a potential pitching trait.
                 self.pitch_die = get_pitch_die(era, quality)
                 first_trait = get_random_ptrait()
                 self.traits.append(first_trait)

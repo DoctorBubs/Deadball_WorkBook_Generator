@@ -30,14 +30,14 @@ def new_team(team: Team, workbook) -> None:
     # We write
     for column, data in enumerate(base_team_info):
         worksheet.write(current_row, column, data)
-    # In cell C2, we write a formulate to calcualte the batting score, which is based off all batters bt.
+    # In cell C2, we write a formulate to calculate the batting score, which is based off all batters bt.
     worksheet.write("C2", "=SUM(D7:D14,D19:D23)")
     # We also write in cell E2 a function that calculates team score, which is calculated by adding a teams hitting and pitching scores, and divide by 10
     worksheet.write("E2", "=SUM(C2:D2) / 10")
 
     current_row = 4
     worksheet.write(current_row, 0, "Starting Lineup")
-    # We write thhe batting headers for the starting lineup
+    # We write the batting headers for the starting lineup
     for column, info in enumerate(batting_headers):
         worksheet.write(5, column, info)
     # We go down a row
@@ -49,11 +49,11 @@ def new_team(team: Team, workbook) -> None:
         # We then fill the row with the data in batter info.
         for column, data in enumerate(batter_info):
             worksheet.write(current_row, column, data)
-        # We next increase the current row
+        # We next increase the current row.
         current_row += 1
     worksheet.write(current_row + 2, 0, "Bench")
     current_row = current_row + 3
-    # We repeat the process for the bench players
+    # We repeat the process for the bench players.
     for column, info in enumerate(batting_headers):
         worksheet.write(current_row, column, info)
     current_row = current_row + 1
@@ -77,12 +77,12 @@ def new_team(team: Team, workbook) -> None:
             for pitcher in team.pitchers:
                 # get pitching info is a player method that returns a list of it's fields related to pitching
                 pitcher_info = pitcher.get_pitching_info()
-                # We wirte the data from pitcher_info to the row
+                # We write the data from pitcher_info to the row
                 for column, data in enumerate(pitcher_info):
                     worksheet.write(current_row, column, data)
                 # Next we go down a row.
                 current_row += 1
-            # To cell D2, we assign a formulat that will calculatate the pitching scoore based off the pitchers die
+            # To cell D2, we assign a formula that will calculate the pitching score based off the pitcher's pitch die.
             worksheet.write("D2", "= SUM(D26:D31) * 7")
         case Era.MODERN:
             # If the team is in the modern era, we do a similar process to ancient teams, however we have 2 groups of pitchers to account for: the starting rotation and the bullpen.
@@ -129,10 +129,12 @@ def get_workbook_name() -> str:
     os.system("cls")
     while True:
         valid_name = valid_workbook_name(user_input)
+        # If the user_input is a valid workbook name, we break the loop and return the input.
         if valid_name:
             result = user_input
             break
         else:
+            # Otherwise, we prompt the user to try something else.
             user_input = prompt(
                 "There is already a worksheet with that name in this folder, please try a different file name."
             )
@@ -146,11 +148,13 @@ def get_team_name(workbook) -> dict:
         name_input = prompt("Please enter the name of the new team.")
         worksheet_name = city_input + " " + name_input
         existing_worksheet = workbook.get_worksheet_by_name(worksheet_name)
+        # If there is an existing worksheet with the same city and team name, we tell the user to try something else.
         if existing_worksheet:
             print(
                 "There is already a worksheet with the same city and team name, please enter a different input."
             )
         else:
+            # Otherwise, we break and return the dict.
             result = {"city": city_input, "name": name_input}
             return result
 
@@ -158,31 +162,40 @@ def get_team_name(workbook) -> dict:
 def main():
     """The main function. It is called when the script runs."""
     # We welcome the user
-    print("Welcome to the Deadball League Generator!")
-    workbook_name = get_workbook_name()
-    workbook = xlsxwriter.Workbook(workbook_name)
-    all_eras = [Era.ANCIENT, Era.MODERN]
-    print("Please select the era for the league.")
-    era = select(all_eras, lambda val: val.value)
-    os.system("cls")
-    # The user then selects the league gender.
-    all_genders = [League_Gender.COED, League_Gender.FEMALE, League_Gender.MALE]
-    print("Please select the gender for the league")
-    gender = select(all_genders, lambda val: val.value)
-    # we create a new league.
-    league = League(workbook_name, era, gender)
-    os.system("cls")
-    # We then loop through the process of creating a new team and creating a worksheet untill the user quits.
+    print("Welcome to the Deadball Workbook Generator!")
+    print("This tool is based off the Deadball tabletop game by W.M. Akers.")
     while True:
-        team_name_dict = get_team_name(workbook)
-        team = league.new_team(team_name_dict.get("city"), team_name_dict.get("name"))
-        new_team(team, workbook)
-        # We asks the user if they would like to add another team to the league.
-        if not confirm("Would you like to add another team to the league?"):
-            break
-    print("League Saved")
+        workbook_name = get_workbook_name()
+        workbook = xlsxwriter.Workbook(workbook_name)
+        all_eras = [Era.ANCIENT, Era.MODERN]
+        print("Please select the era for the league.")
+        era = select(all_eras, lambda val: val.value)
+        os.system("cls")
+        # The user then selects the league gender.
+        all_genders = [League_Gender.COED, League_Gender.FEMALE, League_Gender.MALE]
+        print("Please select the gender for the league")
+        gender = select(all_genders, lambda val: val.value)
+        # we create a new league.
+        league = League(workbook_name, era, gender)
+        os.system("cls")
+        # We then loop through the process of creating a new team and creating a worksheet until the user quits.
+        while True:
+            team_name_dict = get_team_name(workbook)
+            team = league.new_team(
+                team_name_dict.get("city"), team_name_dict.get("name")
+            )
+            new_team(team, workbook)
+            # We asks the user if they would like to add another team to the league.
+            if not confirm("Would you like to add another team to the league?"):
+                break
+        print("League Saved")
 
-    workbook.close()
+        workbook.close()
+        if not confirm("Would you like to add create another workbook?"):
+            os.system("cls")
+            break
+        else:
+            os.system("cls")
 
 
 if __name__ == "__main__":
