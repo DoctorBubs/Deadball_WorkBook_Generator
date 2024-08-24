@@ -3,7 +3,7 @@
 from enum import Enum
 from rpg_dice import roll
 import names
-from league_data import Era, League_Gender
+from league_data import Era, LeagueGender
 from b_traits import BTrait, get_random_btrait, sort_btrait
 from p_traits import PTrait, get_random_ptrait, sort_ptrait, conflicting_ptrait
 
@@ -128,19 +128,19 @@ def get_batter_hand(quality: PlayerQuality) -> Hand:
 class Player:
     """The player class"""
 
-    def new_name(self, gender: League_Gender):
-        """Generates a name for a player based off League_Gender"""
+    def new_name(self, gender: LeagueGender):
+        """Generates a name for a player based off LeagueGender"""
         self.last_name = names.get_last_name()
         match gender:
-            case League_Gender.MALE:
+            case LeagueGender.MALE:
                 self.first_name = names.get_first_name(gender="male")
-            case League_Gender.FEMALE:
+            case LeagueGender.FEMALE:
                 self.first_name = names.get_first_name(gender="female")
             case _:
                 self.first_name = names.get_first_name()
 
     def __init__(
-        self, era: Era, gender: League_Gender, quality: PlayerQuality, pos: str
+        self, era: Era, gender: LeagueGender, quality: PlayerQuality, pos: str
     ) -> None:
         # First we generate a players bt,walk rate, obt, and hand.
         # bt is short for batting target. In real life baseball, it corresponds to a players batting average.

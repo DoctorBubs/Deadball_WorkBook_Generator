@@ -2,7 +2,7 @@
 
 from player import Player
 from player_quality import BatterQuality, PitcherQuality
-from league_data import Era, League_Gender
+from league_data import Era, LeagueGender
 
 lineup_strings = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
 
@@ -24,7 +24,7 @@ def sort_pd(player: Player):
 class Team:
     """The Team object. When generated, it also generates many players based off the era and gender."""
 
-    def __init__(self, city: str, name: str, era: Era, gender: League_Gender) -> None:
+    def __init__(self, city: str, name: str, era: Era, gender: LeagueGender) -> None:
         self.name = name
         self.city = city
         self.era = era

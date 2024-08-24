@@ -1,7 +1,7 @@
 import os
 import xlsxwriter
 from beaupy import confirm, prompt, select
-from league import Era, League_Gender
+from league_data import Era, LeagueGender
 from team import Team
 from league import League
 
@@ -172,7 +172,7 @@ def main():
         era = select(all_eras, lambda val: val.value)
         os.system("cls")
         # The user then selects the league gender.
-        all_genders = [League_Gender.COED, League_Gender.FEMALE, League_Gender.MALE]
+        all_genders = [LeagueGender.COED, LeagueGender.FEMALE, LeagueGender.MALE]
         print("Please select the gender for the league")
         gender = select(all_genders, lambda val: val.value)
         # we create a new league.
