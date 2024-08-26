@@ -97,11 +97,11 @@ class Hand(Enum):
 ## Since players hands are generated at random, we create a list to aid in the generation.
 hand_list = []
 
-# we fill the hand_list with 7 instances of Hand.R
+# we fill the hand_list with 6 instances of Hand.R
 for _ in range(7):
     hand_list.append(Hand.R)
 
-# And 4 instances of Hand.L
+# And 3 instances of Hand.L
 for _ in range(4):
     hand_list.append(Hand.L)
 
@@ -112,7 +112,7 @@ def get_batter_hand(quality: PlayerQuality) -> Hand:
     hand_roll = roll("1d10")
     match hand_roll:
         # Rolling a 10 is a special action. If the player is a batter,
-        # then the batter will be a switch hitter,otherwise the batter will be a lefty '''
+        # then the batter will be a switch hitter,otherwise the batter will be a lefty 
         case 10:
             match quality:
                 case BatterQuality():
