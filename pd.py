@@ -1,4 +1,4 @@
-"""Pitchers in deadball have pitch dice, which correspnd to which dice is thrown when a pitcher is used during a plate appearance."""
+"""Pitchers in Deadball have pitch dice, which correspond to which dice is thrown when a pitcher is used during a plate appearance."""
 
 from enum import Enum
 from rpg_dice import roll
@@ -7,7 +7,7 @@ from player_quality import PitcherQuality
 
 
 class PitchDie(Enum):
-    """A pitcher's pitchdie. The value of each enum corresponds to max value
+    """A pitcher's pitch die. The value of each enum corresponds to max value
     away from zero that the die is capable of. Higher is better!"""
 
     d20 = 20
@@ -44,25 +44,17 @@ def new_modern_die(off_set: int) -> PitchDie:
             return PitchDie.d8
 
 
-# These r
+"""Ancient pitchers have a different variety of potential pitch die than modern pitchers.
+    To create their pitch die, we generate a list of dicts that contain a die
+    value that lists a pitch die, and a range value that contains a range of numbers.
+    If a die roll is in the range value, then the die result will be the dicts die value."""
+
 ancient_ranges = [
-    {
-        "die": PitchDie.d12,
-        "range": range(2, 4),
-    },
-    {
-        "die": PitchDie.d8,
-        "range": range(4, 6),
-    },
-    {
-        "die": PitchDie.d6,
-        "range": range(6, 9),
-    },
-    {
-        "die": PitchDie.d4,
-        "range": range(9, 11),
-    },
-    {"die": PitchDie.md4, "range": range(12, 14)},
+    {"die": PitchDie.d12, "range": range(2, 4)},
+    {"die": PitchDie.d8, "range": range(4, 6)},
+    {"die": PitchDie.d6, "range": range(6, 9)},
+    {"die": PitchDie.d4, "range": range(9, 11)},
+    {"die": PitchDie.md4, "range": range(12, 14)}
 ]
 
 
@@ -70,11 +62,11 @@ def new_ancient_die(off_set: int) -> PitchDie:
     """Generates an pitch die based off ancient rules, with off_set limiting the best result possible."""
     pitch_roll = roll("1d12") + off_set
     match pitch_roll:
-        # If the roll = 1, the pitchdie will be D20.
+        # If the roll = 1, the pitch die will be D20.
         case 1:
             return PitchDie.d20
         case _:
-            # Otherwise, we loop ancient range. If the pitch_roll is found in the range, then the corresponsding die is returned.
+            # Otherwise, we loop ancient_ranges. If the pitch_roll is found in dicts range value, then the corresponding die is returned.
             result = None
             for range_dict in ancient_ranges:
                 if pitch_roll in range_dict.get("range"):
