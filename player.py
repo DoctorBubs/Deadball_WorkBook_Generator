@@ -7,7 +7,7 @@ from league_data import Era, LeagueGender
 from b_traits import BTrait, get_random_btrait, sort_btrait
 from p_traits import PTrait, get_random_ptrait, sort_ptrait, conflicting_ptrait
 
-from pd import get_pitch_die, PitchDie
+from pd import get_pitch_die
 from player_quality import BatterQuality, PitcherQuality, PlayerQuality
 
 
@@ -25,7 +25,7 @@ def generate_age(age_cat: AgeCat) -> int:
     """Generates a players age based off AgeCat"""
     # We roll a d6 to
     age_roll = roll("1d6")
-    # And then match the result to determin an age
+    # And then match the result to determine an age
     match age_cat:
         case AgeCat.PROSPECT:
             return 18 + age_roll
@@ -112,7 +112,7 @@ def get_batter_hand(quality: PlayerQuality) -> Hand:
     hand_roll = roll("1d10")
     match hand_roll:
         # Rolling a 10 is a special action. If the player is a batter,
-        # then the batter will be a switch hitter,otherwise the batter will be a lefty 
+        # then the batter will be a switch hitter,otherwise the batter will be a lefty.
         case 10:
             match quality:
                 case BatterQuality():
@@ -121,7 +121,7 @@ def get_batter_hand(quality: PlayerQuality) -> Hand:
                     return Hand.L
         case _:
             # If the roll does not equal 10, we subtract 1 from the hand roll
-            # and return the corresponding value from the hand array, and we return righty if the value doesn't exist
+            # and return the corresponding value from the hand array, and we return righty if the value doesn't exist.
             return hand_list[hand_roll - 1] or Hand.R
 
 
@@ -147,7 +147,7 @@ class Player:
         self.bt = generate_bt(quality)
         # walk rate is how often a player's walks, as in real life baseball
         self.walk_rate = get_walk_rate(quality)
-        """obt is short ofr on base target. It corresponds to a real life player OBP, and is calulated by adding a
+        """obt is short ofr on base target. It corresponds to a real life player OBP, and is calculated by adding a
         players bt and walkrate."""
         self.obt = self.bt + self.walk_rate
         """ We determine if a player bats and/or pitches right handed or left handed. 
@@ -169,7 +169,7 @@ class Player:
                 first_trait = get_random_ptrait()
                 self.traits.append(first_trait)
                 match quality:
-                    # If the pitcher is a farmhand, they roll for a trail only once.
+                    # If the pitcher is a farmhand, they roll for a trait only once.
                     case PitcherQuality.FARMHAND:
                         pass
                     # Otherwise, if the pitcher received a trait on the first roll, it rolls for another trait.
@@ -209,7 +209,7 @@ class Player:
                                     != first_trait.value.category
                                 ):
                                     self.traits.append(second_trait)
-                                    # The trait list is sorted so positive traits show first
+                                    # The trait list is sorted so positive traits show first.
                                     self.traits.sort(reverse=True, key=sort_btrait)
 
     def get_pitching_trait_string(self) -> str:
