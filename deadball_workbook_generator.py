@@ -159,7 +159,7 @@ def get_team_name(workbook) -> dict:
             return result
 
 
-def main():
+def main() -> None:
     """The main function. It is called when the script runs."""
     # We welcome the user
     print("Welcome to the Deadball Workbook Generator!")
