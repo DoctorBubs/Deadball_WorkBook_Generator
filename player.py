@@ -41,7 +41,7 @@ def random_age() -> int:
     """Assisgns a player to a random age"""
     age_roll = roll("1d6")
     # This will latter become an AgeCat value
-    age_cat = None
+    age_cat = AgeCat.ROOKIE
     # We look through various ranges to find a match to determine age_cat.
     if age_roll in range(1, 3):
         age_cat = AgeCat.PROSPECT
