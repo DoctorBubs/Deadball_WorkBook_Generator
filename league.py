@@ -1,11 +1,10 @@
-"""Leagues currently contain the settings such as Era and gender to create teams. This module is currenty a WIP."""
-
+"""Leagues currently contain the settings such as Era and gender to create teams. This module is currently a WIP."""
+import random
 from league_data import Era, LeagueGender
 from team import Team
 from series import Series
 
 type Schedule = list[Series]
-import random
 
 
 class League:
@@ -30,7 +29,7 @@ class League:
         result = []
         # all_series will be a list that contains series created by teams.
         all_series = []
-        # Since all teams will be active in a round, but can only play one team per round, we need a number that is half othe number of teams.
+        # Since all teams will be active in a round, but can only play one team per round, we need a number that is half the number of teams.
         half_teams = len(self.teams) / 2
         # we have every team generate a list of series with the team as the home team
         matchup_per_team = int(series_per_matchup / 2)
@@ -40,14 +39,18 @@ class League:
             all_series = all_series + team_series
         print("Teams have generated series")
         while len(all_series) > 0:
-            # the new
+            # the new round is a list.
             new_round = []
+            # We also use a list to keep track  of what teams have already been scheduled this round.
             used_teams = []
+            # We start by picking a random series. The series is removed from all series and added to the round.
             first_series = random.choice(all_series)
             all_series.remove(first_series)
             new_round.append(first_series)
+            # We take the home team and away team from the series and add it to the used teams list
             used_teams.append(first_series.home_team)
             used_teams.append(first_series.away_team)
+            
             while len(new_round) < half_teams:
                 potential_series = []
                 for series in all_series:

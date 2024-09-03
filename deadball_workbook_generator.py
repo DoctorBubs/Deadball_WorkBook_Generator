@@ -142,6 +142,7 @@ def get_workbook_name() -> str:
 
 
 def write_schedule(workbook, schedule) -> None:
+    '''Writes a sechule to a new worksheet in the workbook.'''
     worksheet = workbook.add_worksheet("SCHEDULE")
     current_row = 0
     worksheet.write(0, 1, "Home Team")
@@ -209,14 +210,21 @@ def main() -> None:
         if team_number % 2 != 0:
             print("An even number of teams is need to generate a schedule")
         else:
-            sched_number = prompt(
-                "Please enter how many series will be schedule between every team",
-                int,
-                lambda input: input % 2 == 0,
-            )
-            sched = league.new_schedule(sched_number)
-            write_schedule(workbook, sched)
-
+            while True:
+                sched_number = prompt(
+                    "Please enter how many series will be schedule between every team.",int
+                )
+                if isinstance(sched_number,int):
+                        if sched_number <= 0 or sched_number % 2 != 0 :
+                            os.system("cls")
+                            print("Input must be a whole number greater than 0, please try again.")
+                        else:    
+                            sched = league.new_schedule(sched_number)
+                            write_schedule(workbook, sched)
+                            break
+                else:
+                    os.system("cls")
+                    print("Input must be a whole number greater than 0, please try again.")
         workbook.close()
         if not confirm("Would you like to add create another workbook?"):
             os.system("cls")
