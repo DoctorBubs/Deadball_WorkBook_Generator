@@ -54,7 +54,7 @@ ancient_ranges = [
     {"die": PitchDie.d8, "range": range(4, 6)},
     {"die": PitchDie.d6, "range": range(6, 9)},
     {"die": PitchDie.d4, "range": range(9, 11)},
-    {"die": PitchDie.md4, "range": range(12, 14)}
+    {"die": PitchDie.md4, "range": range(12, 14)},
 ]
 
 

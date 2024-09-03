@@ -4,7 +4,7 @@ from player import Player
 from player_quality import BatterQuality, PitcherQuality
 from league_data import Era, LeagueGender
 from series import Series
-    
+
 lineup_strings = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
 
 modern_bench_strings = ["C", "INF", "INF", "OF", "OF"]
@@ -22,10 +22,9 @@ def sort_pd(player: Player):
     return player.pitch_die.value
 
 
-
 class Team:
     """The Team object. When generated, it also generates many players based off the era and gender."""
-    
+
     def __init__(self, city: str, name: str, era: Era, gender: LeagueGender) -> None:
         self.name = name
         self.city = city
@@ -79,18 +78,15 @@ class Team:
         self.batting_score = batting_score
         self.team_score = (batting_score + pitching_score) / 10
 
-    
-    
-    def generate_series_list(self, all_teams: list, series_per_matchup: int) -> dict:
-        '''Generates a list of series with self as the home team'''
+    def generate_series_list(
+        self, all_teams: list, series_per_matchup: int
+    ) -> list[Series]:
+        """Generates a list of series with self as the home team"""
         series_list = []
         for away_team in all_teams:
             if away_team != self:
                 for _ in range(series_per_matchup):
-                    new_series = Series(self,away_team)
+                    new_series = Series(self, away_team)
                     series_list.append(new_series)
-        result = {
-            'team' : self,
-            'series_list' : series_list
-        }
-        return result
+
+        return series_list

@@ -141,6 +141,21 @@ def get_workbook_name() -> str:
     return result + ".xlsx"
 
 
+def write_schedule(workbook, schedule) -> None:
+    worksheet = workbook.add_worksheet("SCHEDULE")
+    current_row = 0
+    worksheet.write(0, 1, "Home Team")
+    worksheet.write(0, 3, "Away Team")
+    for round_number, round in enumerate(schedule):
+        current_row += 1
+        worksheet.write(current_row, 0, "Round " + str(round_number + 1))
+        for series in round:
+            current_row += 1
+            worksheet.write(current_row, 1, series.home_team.name)
+            worksheet.write(current_row, 2, "@")
+            worksheet.write(current_row, 3, series.away_team.name)
+
+
 def get_team_name(workbook) -> dict:
     """Returns a dict containing a city and team name, while also ensuring their is not already a worksheet with the same combo."""
     while True:
@@ -185,10 +200,22 @@ def main() -> None:
                 team_name_dict.get("city"), team_name_dict.get("name")
             )
             new_team(team, workbook)
-            # We asks the user if they would like to add another team to the league.
+            # We asks the user if they would like to add another team to the league.PCL
             if not confirm("Would you like to add another team to the league?"):
                 break
         print("League Saved")
+
+        team_number = len(league.teams)
+        if team_number % 2 != 0:
+            print("An even number of teams is need to generate a schedule")
+        else:
+            sched_number = prompt(
+                "Please enter how many series will be schedule between every team",
+                int,
+                lambda input: input % 2 == 0,
+            )
+            sched = league.new_schedule(sched_number)
+            write_schedule(workbook, sched)
 
         workbook.close()
         if not confirm("Would you like to add create another workbook?"):
