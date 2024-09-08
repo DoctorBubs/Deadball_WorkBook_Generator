@@ -142,15 +142,16 @@ def get_workbook_name() -> str:
 
 
 def write_schedule(workbook, schedule) -> None:
-    '''Writes a sechule to a new worksheet in the workbook.'''
+    """Writes a sechule to a new worksheet in the workbook."""
     worksheet = workbook.add_worksheet("SCHEDULE")
     current_row = 0
     worksheet.write(0, 1, "Home Team")
     worksheet.write(0, 3, "Away Team")
-    for round_number, round in enumerate(schedule):
+    print("schedule length = " + str(len(schedule)))
+    for round_number, round_list in enumerate(schedule):
         current_row += 1
         worksheet.write(current_row, 0, "Round " + str(round_number + 1))
-        for series in round:
+        for series in round_list:
             current_row += 1
             worksheet.write(current_row, 1, series.home_team.name)
             worksheet.write(current_row, 2, "@")
@@ -193,6 +194,7 @@ def main() -> None:
         gender = select(all_genders, lambda val: val.value)
         # we create a new league.
         league = League(workbook_name, era, gender)
+
         os.system("cls")
         # We then loop through the process of creating a new team and creating a worksheet until the user quits.
         while True:
@@ -201,30 +203,37 @@ def main() -> None:
                 team_name_dict.get("city"), team_name_dict.get("name")
             )
             new_team(team, workbook)
+            print("Team created = " + str(len(league.teams)))
             # We asks the user if they would like to add another team to the league.PCL
             if not confirm("Would you like to add another team to the league?"):
                 break
         print("League Saved")
 
         team_number = len(league.teams)
+        print("Team number = " + str(team_number))
         if team_number % 2 != 0:
             print("An even number of teams is need to generate a schedule")
         else:
             while True:
                 sched_number = prompt(
-                    "Please enter how many series will be schedule between every team.",int
+                    "Please enter how many series will be schedule between every team.",
+                    int,
                 )
-                if isinstance(sched_number,int):
-                        if sched_number <= 0 or sched_number % 2 != 0 :
-                            os.system("cls")
-                            print("Input must be a whole number greater than 0, please try again.")
-                        else:    
-                            sched = league.new_schedule(sched_number)
-                            write_schedule(workbook, sched)
-                            break
+                if isinstance(sched_number, int):
+                    if sched_number <= 0 or sched_number % 2 != 0:
+                        os.system("cls")
+                        print(
+                            "Input must be a whole even number greater than 0, please try again."
+                        )
+                    else:
+                        sched = league.new_schedule(sched_number)
+                        write_schedule(workbook, sched)
+                        break
                 else:
                     os.system("cls")
-                    print("Input must be a whole number greater than 0, please try again.")
+                    print(
+                        "Input must be a whole number greater than 0, please try again."
+                    )
         workbook.close()
         if not confirm("Would you like to add create another workbook?"):
             os.system("cls")

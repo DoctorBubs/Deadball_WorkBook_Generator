@@ -3,7 +3,7 @@
 from player import Player
 from player_quality import BatterQuality, PitcherQuality
 from league_data import Era, LeagueGender
-from series import Series
+
 
 lineup_strings = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
 
@@ -78,15 +78,8 @@ class Team:
         self.batting_score = batting_score
         self.team_score = (batting_score + pitching_score) / 10
 
-    def generate_series_list(
-        self, all_teams: list, series_per_matchup: int
-    ) -> list[Series]:
-        """Generates a list of series with self as the home team"""
-        series_list = []
-        for away_team in all_teams:
-            if away_team != self:
-                for _ in range(series_per_matchup):
-                    new_series = Series(self, away_team)
-                    series_list.append(new_series)
+    def add_name_to_dict(self, target_dict: dict[str, bool]):
+        target_dict[self.name] = True
 
-        return series_list
+    def name_in_dict(self, target_dict: dict[str, bool]):
+        return self.name in target_dict
