@@ -17,11 +17,13 @@ class Series:
         return self.home_team.name + " @ " + self.away_team.name
 
     def teams_in_dict(self, target_dict: dict[str, bool]) -> bool:
+        """ Checks to see if a dict has a key for the series home team or away team."""
         return self.home_team.name_in_dict(target_dict) or self.away_team.name_in_dict(
             target_dict
         )
 
     def add_teams_to_dict(self, target_dict: dict[str, bool]) -> None:
+        """ Takes a dict, and add's the series home and away teams as keys with a true value for each."""
         self.home_team.add_name_to_dict(target_dict)
         self.away_team.add_name_to_dict(target_dict)
 
