@@ -95,7 +95,7 @@ class Hand(Enum):
 
 
 ## Since players hands are generated at random, we create a list to aid in the generation.
-hand_list = []
+hand_list: list[Hand] = []
 
 # we fill the hand_list with 6 instances of Hand.R
 for _ in range(7):

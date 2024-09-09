@@ -158,7 +158,7 @@ def write_schedule(workbook, schedule) -> None:
             worksheet.write(current_row, 3, series.away_team.name)
 
 
-def get_team_name(workbook) -> dict:
+def get_team_name(workbook,names_taken: list[str]) -> dict:
     """Returns a dict containing a city and team name, while also ensuring their is not already a worksheet with the same combo."""
     
     while True:
@@ -175,6 +175,7 @@ def get_team_name(workbook) -> dict:
             
             # Otherwise, we break and return the dict.
             result = {"city": city_input, "name": name_input}
+            names_taken.append(worksheet_name)
             return result
 
 
@@ -198,16 +199,21 @@ def main() -> None:
         league = League(workbook_name, era, gender)
        
         os.system("cls")
+        # We create a list of string that keeps track of what names have already been used in the current workbook.
+        names_taken: list[str] = []
         # We then loop through the process of creating a new team and creating a worksheet until the user quits.
         while True:
-            team_name_dict = get_team_name(workbook)
+            if len(names_taken) != 0:
+                print("Names Taken: " + str(names_taken))
+            team_name_dict = get_team_name(workbook,names_taken)
             team: Team = league.new_team(
                 team_name_dict.get("city"), team_name_dict.get("name")
             )
             new_team(team,workbook)
-            print("Team created = " + str(len(league.teams)))
+            os.system("cls")
             # We asks the user if they would like to add another team to the league.PCL
             if not confirm("Would you like to add another team to the league?"):
+                
                 break
         print("League Saved")
 
