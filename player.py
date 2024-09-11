@@ -3,8 +3,9 @@
 from enum import Enum
 from rpg_dice import roll
 import names
-from league_data import Era, LeagueGender
 from b_traits import BTrait, get_random_btrait, sort_btrait
+from league_data import Era, LeagueGender
+
 from p_traits import PTrait, get_random_ptrait, sort_ptrait, conflicting_ptrait
 
 from pd import get_pitch_die

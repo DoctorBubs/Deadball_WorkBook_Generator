@@ -211,7 +211,7 @@ def main() -> None:
             )
             new_team(team,workbook)
             os.system("cls")
-            # We asks the user if they would like to add another team to the league.PCL
+            # We asks the user if they would like to add another team to the league.
             if not confirm("Would you like to add another team to the league?"):
                 
                 break

@@ -48,7 +48,6 @@ def new_modern_die(off_set: int) -> PitchDie:
     To create their pitch die, we generate a list of dicts that contain a die
     value that lists a pitch die, and a range value that contains a range of numbers.
     If a die roll is in the range value, then the die result will be the dicts die value."""
-
 ancient_ranges = [
     {"die": PitchDie.d12, "range": range(2, 4)},
     {"die": PitchDie.d8, "range": range(4, 6)},
