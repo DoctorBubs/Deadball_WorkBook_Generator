@@ -6,8 +6,8 @@ Please note the script can only create new workbooks at this time, and the scrip
 
 
 # Schedule and issue
-If a league has an even amount of teams, a schedule is also generated for the league. The user is given a prompt for how many series should be played between each teams, and a schedule tab is added to the worksheet. However, this is a work in process, as calculating a balanced schedule for teams is somewhat tricky, so currently the geenrated schedule does not have an even number of series played per round generated. It is also possible for the program to crash if the user selects a workbook name that is not a valid file name.
+If a league has an even amount of teams, a schedule is also generated for the league. The user is given a prompt for how many series should be played between each teams, and a schedule tab is added to the worksheet. However, this is a work in process, as calculating a balanced schedule for teams is somewhat tricky, so currently the generated schedule does not have an even number of series played per round generated. It is also possible for the program to crash if the user selects a workbook name that is not a valid file name.
 
-If you are interested in creating a Deadball Leauge but have the result saved in a SQL database instead, please consider [my other repo](https://github.com/DoctorBubs/Deadball-Database-Generator). 
+If you are interested in creating a Deadball League but have the result saved in a SQL database instead, please consider [my other repo](https://github.com/DoctorBubs/Deadball-Database-Generator). 
 
 
