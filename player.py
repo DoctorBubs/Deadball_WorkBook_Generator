@@ -3,9 +3,9 @@
 from enum import Enum
 from rpg_dice import roll
 import names
-from b_traits import BTrait, get_random_btrait, sort_btrait
-from league_data import Era, LeagueGender
 
+from league_data import Era, LeagueGender
+from b_traits import BTrait, get_random_btrait, sort_btrait
 from p_traits import PTrait, get_random_ptrait, sort_ptrait, conflicting_ptrait
 
 from pd import get_pitch_die
@@ -39,7 +39,7 @@ def generate_age(age_cat: AgeCat) -> int:
 
 
 def random_age() -> int:
-    """Assisgns a player to a random age"""
+    """Assigns a player to a random age"""
     age_roll = roll("1d6")
     # This will latter become an AgeCat value
     age_cat = AgeCat.ROOKIE

@@ -55,4 +55,6 @@ def conflicting_ptrait(trait_a: PTrait, trait_b: PTrait) -> bool:
     """To determine if there is a conflict between two pitching traits,
     we check if both traits are related to command.
     If they are, their is a conflict"""
+    if trait_a == trait_b:
+        return True
     return trait_a in command_traits and trait_b in command_traits

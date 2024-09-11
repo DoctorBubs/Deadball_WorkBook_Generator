@@ -1,3 +1,5 @@
+"""BTRAIT contains the traits given to batters."""
+
 from enum import Enum
 from rpg_dice import roll
 

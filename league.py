@@ -1,4 +1,5 @@
-"""Leagues currently contain the settings such as Era and gender to create teams. This module is currently a WIP."""
+"""Leagues currently contain the settings such as Era and gender to create teams. This module is currently a WIP, as the schedule generator is not working.."""
+
 import random
 from league_data import Era, LeagueGender
 from team import Team
@@ -29,27 +30,26 @@ class League:
         result: list[Series] = []
         # all_series will be a list that contains series created by teams.
         all_series: list[Series] = []
-     
-        
+
         # we have every team generate a list of series with the team as the home team.
         matchup_per_team = int(series_per_matchup / 2)
         for team in self.teams:
             # We divide series per matchup by 2, as each team will be generating only the home series for each matchup.
-            team_series = generate_series_list(team,self.teams, matchup_per_team)
+            team_series = generate_series_list(team, self.teams, matchup_per_team)
             all_series = all_series + team_series
         print("Teams have generated series")
         while len(all_series) > 0:
             # the new round is a list.
             new_round: list[Series] = []
             # We also use a dict to keep track  of what teams have already been scheduled this round.
-            used_teams: dict[str,bool] = {}
+            used_teams: dict[str, bool] = {}
             # We start by picking a random series. The series is removed from all series and added to the round.
             first_series = random.choice(all_series)
             all_series.remove(first_series)
             new_round.append(first_series)
-            # We take the home team and away team from the series and add it to the used teams list
+            # We take the home team and away team from the series and add it to the used teams list.
             first_series.add_teams_to_dict(used_teams)
-            
+
             while True:
                 potential_series: list[Series] = []
                 for series in all_series:

@@ -79,7 +79,9 @@ class Team:
         self.team_score = (batting_score + pitching_score) / 10
 
     def add_name_to_dict(self, target_dict: dict[str, bool]):
+        """Add's a teams name as a key to a dict with a true value."""
         target_dict[self.name] = True
 
     def name_in_dict(self, target_dict: dict[str, bool]):
+        """Check if a teams name is a key in a dict."""
         return self.name in target_dict

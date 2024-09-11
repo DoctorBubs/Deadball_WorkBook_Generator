@@ -1,3 +1,4 @@
+'''The main moduule, run from here to run the whole program.'''
 import os
 import xlsxwriter
 from beaupy import confirm, prompt, select
@@ -142,7 +143,7 @@ def get_workbook_name() -> str:
 
 
 def write_schedule(workbook, schedule) -> None:
-    '''Writes a schedule to a new worksheet in the workbook.'''
+    """Writes a schedule to a new worksheet in the workbook."""
     worksheet = workbook.add_worksheet("SCHEDULE")
     current_row = 0
     worksheet.write(0, 1, "Home Team")
@@ -158,11 +159,11 @@ def write_schedule(workbook, schedule) -> None:
             worksheet.write(current_row, 3, series.away_team.name)
 
 
-def get_team_name(workbook,names_taken: list[str]) -> dict:
+def get_team_name(workbook, names_taken: list[str]) -> dict:
     """Returns a dict containing a city and team name, while also ensuring their is not already a worksheet with the same combo."""
-    
+
     while True:
-        city_input: str= prompt("Please enter the name of the city for the new team.")
+        city_input: str = prompt("Please enter the name of the city for the new team.")
         name_input: str = prompt("Please enter the name of the new team.")
         worksheet_name: str = city_input + " " + name_input
         existing_worksheet: bool = workbook.get_worksheet_by_name(worksheet_name)
@@ -172,7 +173,7 @@ def get_team_name(workbook,names_taken: list[str]) -> dict:
                 "There is already a worksheet with the same city and team name, please enter a different input."
             )
         else:
-            
+
             # Otherwise, we break and return the dict.
             result = {"city": city_input, "name": name_input}
             names_taken.append(worksheet_name)
@@ -192,12 +193,16 @@ def main() -> None:
         era: Era = select(all_eras, lambda val: val.value)
         os.system("cls")
         # The user then selects the league gender.
-        all_genders: list[LeagueGender] = [LeagueGender.COED, LeagueGender.FEMALE, LeagueGender.MALE]
+        all_genders: list[LeagueGender] = [
+            LeagueGender.COED,
+            LeagueGender.FEMALE,
+            LeagueGender.MALE,
+        ]
         print("Please select the gender for the league")
         gender: LeagueGender = select(all_genders, lambda val: val.value)
         # we create a new league.
         league = League(workbook_name, era, gender)
-       
+
         os.system("cls")
         # We create a list of string that keeps track of what names have already been used in the current workbook.
         names_taken: list[str] = []
@@ -205,15 +210,15 @@ def main() -> None:
         while True:
             if len(names_taken) != 0:
                 print("Names Taken: " + str(names_taken))
-            team_name_dict = get_team_name(workbook,names_taken)
+            team_name_dict = get_team_name(workbook, names_taken)
             team: Team = league.new_team(
                 team_name_dict.get("city"), team_name_dict.get("name")
             )
-            new_team(team,workbook)
+            new_team(team, workbook)
             os.system("cls")
             # We asks the user if they would like to add another team to the league.
             if not confirm("Would you like to add another team to the league?"):
-                
+
                 break
         print("League Saved")
 
@@ -224,19 +229,24 @@ def main() -> None:
         else:
             while True:
                 sched_number = prompt(
-                    "Please enter how many series will be schedule between every team.",int
+                    "Please enter how many series will be schedule between every team.",
+                    int,
                 )
-                if isinstance(sched_number,int):
-                        if sched_number <= 0 or sched_number % 2 != 0 :
-                            os.system("cls")
-                            print("Input must be a whole even number greater than 0, please try again.")
-                        else:    
-                            sched = league.new_schedule(sched_number)
-                            write_schedule(workbook, sched)
-                            break
+                if isinstance(sched_number, int):
+                    if sched_number <= 0 or sched_number % 2 != 0:
+                        os.system("cls")
+                        print(
+                            "Input must be a whole even number greater than 0, please try again."
+                        )
+                    else:
+                        sched = league.new_schedule(sched_number)
+                        write_schedule(workbook, sched)
+                        break
                 else:
                     os.system("cls")
-                    print("Input must be a whole number greater than 0, please try again.")
+                    print(
+                        "Input must be a whole number greater than 0, please try again."
+                    )
         workbook.close()
         if not confirm("Would you like to add create another workbook?"):
             os.system("cls")
