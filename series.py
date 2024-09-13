@@ -1,4 +1,5 @@
-'''Represents a series of games between 2 games. Used in generating a schedule.'''
+"""Represents a series of games between 2 games. Used in generating a schedule."""
+
 from dataclasses import dataclass
 from team import Team
 

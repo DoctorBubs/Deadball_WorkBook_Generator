@@ -1,4 +1,4 @@
-'''The main moduule, run from here to run the whole program.'''
+'''The main module, run from here to run the whole program.'''
 import os
 import xlsxwriter
 from beaupy import confirm, prompt, select
@@ -218,35 +218,36 @@ def main() -> None:
             os.system("cls")
             # We asks the user if they would like to add another team to the league.
             if not confirm("Would you like to add another team to the league?"):
-
                 break
+        
         print("League Saved")
 
         team_number = len(league.teams)
-        print("Team number = " + str(team_number))
         if team_number % 2 != 0:
             print("An even number of teams is need to generate a schedule")
         else:
-            while True:
-                sched_number = prompt(
-                    "Please enter how many series will be schedule between every team.",
-                    int,
-                )
-                if isinstance(sched_number, int):
-                    if sched_number <= 0 or sched_number % 2 != 0:
+            if confirm("Would you like to generate a balance schedule for the league?"):
+                while True:
+                    sched_number = prompt(
+                        "Please enter how many series will be schedule between every team.",
+                        int,
+                    )
+                    if isinstance(sched_number, int):
+                        if sched_number <= 0 or sched_number % 2 != 0:
+                            os.system("cls")
+                            print(
+                                "Input must be a whole even number greater than 0, please try again."
+                            )
+                        else:
+                            sched = league.new_schedule(sched_number)
+                            write_schedule(workbook, sched)
+                            break
+                    else:
                         os.system("cls")
                         print(
-                            "Input must be a whole even number greater than 0, please try again."
+                            "Input must be a whole number greater than 0, please try again."
                         )
-                    else:
-                        sched = league.new_schedule(sched_number)
-                        write_schedule(workbook, sched)
-                        break
-                else:
-                    os.system("cls")
-                    print(
-                        "Input must be a whole number greater than 0, please try again."
-                    )
+        os.system("cls")
         workbook.close()
         if not confirm("Would you like to add create another workbook?"):
             os.system("cls")
