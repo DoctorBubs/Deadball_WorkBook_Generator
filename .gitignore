@@ -1,2 +1,9 @@
-# Created by venv; see https://docs.python.org/3/library/venv.html
-*
+deadball.db
+hello.xlsx
+test.xlsx
+sheet_archive
+__pycache__
+old_leagues
+Lib
+Scripts
+pyvenv.cfg
