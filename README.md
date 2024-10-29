@@ -1,4 +1,3 @@
-![akers_logo](https://github.com/user-attachments/assets/f1ae08f7-4324-4923-9e41-dabdda777994)
 
 # Summary
 Based off the [Deadball tabletop baseball game by W.M. Akers](http://wmakers.net/deadball), this Python script automatically generates fictional leagues, teams, and players via an interactive prompt. When a league is created, all the teams and players are saved in an Excel workbook. The script can generate players based off both the ancient and modern Deadball rulesets, and the player may also choose the gender identity of the league upon creation.
